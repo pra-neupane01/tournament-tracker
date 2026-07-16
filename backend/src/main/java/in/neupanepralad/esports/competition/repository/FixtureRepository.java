@@ -9,5 +9,9 @@ import java.util.UUID;
 public interface FixtureRepository extends JpaRepository<Fixture, UUID> {
     List<Fixture> findAllByStageIdOrderByRoundNumberAscMatchNumberAsc(UUID stageId);
 
+    List<Fixture> findAllByStageTournamentIdOrderByStageSequenceNumberAscRoundNumberAscMatchNumberAsc(
+            UUID tournamentId
+    );
+
     void deleteAllByStageId(UUID stageId);
 }

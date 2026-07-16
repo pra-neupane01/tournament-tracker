@@ -51,6 +51,7 @@ public class SecurityConfig {
                     "/swagger-resources/**",
                     "/webjars/**",
                     "/ws/**",
+                    "/certificates/verify/**",
                     "/auth/register",
                     "/auth/login",
                     "/auth/refresh"

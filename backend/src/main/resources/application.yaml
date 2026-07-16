@@ -46,6 +46,9 @@ app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
 
+  files:
+    storage-path: ${FILE_STORAGE_PATH:./data/uploads}
+
   security:
     jwt:
       secret: ${JWT_SECRET:change-this-development-secret-before-production}

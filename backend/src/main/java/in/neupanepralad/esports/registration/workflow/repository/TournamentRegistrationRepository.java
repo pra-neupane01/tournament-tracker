@@ -41,4 +41,6 @@ public interface TournamentRegistrationRepository
             UUID tournamentId,
             RegistrationStatus status
     );
+
+    List<TournamentRegistration> findAllByTournamentIdOrderBySubmittedAtAsc(UUID tournamentId);
 }
