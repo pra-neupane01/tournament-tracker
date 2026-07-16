@@ -27,6 +27,8 @@ import in.neupanepralad.esports.team.service.TeamAccessService;
 import in.neupanepralad.esports.tournament.service.TournamentAccessService;
 import in.neupanepralad.esports.user.model.User;
 import in.neupanepralad.esports.user.repository.UserRepository;
+import in.neupanepralad.esports.notification.model.NotificationType;
+import in.neupanepralad.esports.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,7 @@ public class MatchOperationsService {
     private final TeamAccessService teamAccessService;
     private final UserRepository userRepository;
     private final RoomSecretCipher roomSecretCipher;
+    private final NotificationService notificationService;
 
     @Transactional
     public FixtureResponse schedule(
@@ -98,6 +101,15 @@ public class MatchOperationsService {
         fixture.setVenue(request.venue());
         fixture.setStreamUrl(request.streamUrl());
         fixture.setStatus(FixtureStatus.SCHEDULED);
+        participantRepository.findAllByFixtureIdOrderBySlotNumberAsc(fixtureId)
+                .forEach(participant -> notificationService.send(
+                        participant.getRegistration().getSubmittedBy(),
+                        NotificationType.FIXTURE,
+                        "Fixture scheduled",
+                        participant.getRegistration().getTeam().getName()
+                                + " has a fixture scheduled for " + request.scheduledAt(),
+                        "/fixtures/" + fixtureId
+                ));
         return toFixtureResponse(fixture);
     }
 

@@ -31,6 +31,8 @@ import in.neupanepralad.esports.tournament.model.Tournament;
 import in.neupanepralad.esports.tournament.service.TournamentAccessService;
 import in.neupanepralad.esports.user.model.User;
 import in.neupanepralad.esports.user.repository.UserRepository;
+import in.neupanepralad.esports.notification.model.NotificationType;
+import in.neupanepralad.esports.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -57,6 +59,7 @@ public class GovernanceService {
     private final TournamentAccessService tournamentAccessService;
     private final TeamAccessService teamAccessService;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public PenaltyResponse issuePenalty(
@@ -204,6 +207,16 @@ public class GovernanceService {
         } else {
             dispute.setResolvedAt(null);
         }
+        notificationService.send(
+                dispute.getOpenedBy(),
+                NotificationType.DISPUTE,
+                "Dispute " + request.status().name().toLowerCase(java.util.Locale.ROOT),
+                "Your dispute for fixture " + dispute.getFixture().getId()
+                        + " is now " + request.status().name().toLowerCase(
+                        java.util.Locale.ROOT
+                ),
+                "/disputes/" + dispute.getId()
+        );
         return toDisputeResponse(dispute);
     }
 

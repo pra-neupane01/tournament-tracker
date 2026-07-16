@@ -50,6 +50,7 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/swagger-resources/**",
                     "/webjars/**",
+                    "/ws/**",
                     "/auth/register",
                     "/auth/login",
                     "/auth/refresh"

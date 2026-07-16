@@ -30,6 +30,8 @@ import in.neupanepralad.esports.tournament.model.TournamentStatus;
 import in.neupanepralad.esports.tournament.service.TournamentAccessService;
 import in.neupanepralad.esports.user.model.User;
 import in.neupanepralad.esports.user.repository.UserRepository;
+import in.neupanepralad.esports.notification.model.NotificationType;
+import in.neupanepralad.esports.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -61,6 +63,7 @@ public class TournamentRegistrationService {
     private final TeamAccessService teamAccessService;
     private final TournamentAccessService tournamentAccessService;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public RegistrationResponse submit(
@@ -186,6 +189,15 @@ public class TournamentRegistrationService {
         registration.setReviewNotes(request.reviewNotes());
         registration.setReviewedBy(requireUser(actorId));
         registration.setReviewedAt(LocalDateTime.now(ZoneOffset.UTC));
+        notificationService.send(
+                registration.getSubmittedBy(),
+                NotificationType.REGISTRATION,
+                "Registration " + request.status().name().toLowerCase(Locale.ROOT),
+                registration.getTeam().getName() + " registration for "
+                        + registration.getTournament().getName() + " was "
+                        + request.status().name().toLowerCase(Locale.ROOT),
+                "/registrations/" + registration.getId()
+        );
         return toResponse(registration);
     }
 

@@ -29,6 +29,8 @@ import in.neupanepralad.esports.team.service.TeamAccessService;
 import in.neupanepralad.esports.tournament.service.TournamentAccessService;
 import in.neupanepralad.esports.user.model.User;
 import in.neupanepralad.esports.user.repository.UserRepository;
+import in.neupanepralad.esports.notification.model.NotificationType;
+import in.neupanepralad.esports.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +61,7 @@ public class ResultService {
     private final TournamentAccessService tournamentAccessService;
     private final TeamAccessService teamAccessService;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public ResultSubmissionResponse submit(
@@ -178,6 +181,14 @@ public class ResultService {
                     : null);
             fixture.setStatus(FixtureStatus.COMPLETED);
         }
+        notificationService.send(
+                submission.getSubmittedBy(),
+                NotificationType.RESULT,
+                "Result " + request.status().name().toLowerCase(Locale.ROOT),
+                "Your result submission was "
+                        + request.status().name().toLowerCase(Locale.ROOT),
+                "/fixtures/" + fixture.getId() + "/results"
+        );
         return toResponse(submission);
     }
 
