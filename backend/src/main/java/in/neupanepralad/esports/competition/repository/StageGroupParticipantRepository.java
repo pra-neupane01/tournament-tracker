@@ -11,5 +11,7 @@ public interface StageGroupParticipantRepository
 
     List<StageGroupParticipant> findAllByGroupIdOrderBySeedAsc(UUID groupId);
 
+    List<StageGroupParticipant> findAllByGroupStageId(UUID stageId);
+
     void deleteAllByGroupStageId(UUID stageId);
 }

@@ -26,6 +26,7 @@ import in.neupanepralad.esports.competition.repository.TournamentStageRepository
 import in.neupanepralad.esports.registration.workflow.model.RegistrationStatus;
 import in.neupanepralad.esports.registration.workflow.model.TournamentRegistration;
 import in.neupanepralad.esports.registration.workflow.repository.TournamentRegistrationRepository;
+import in.neupanepralad.esports.leaderboard.repository.StageQualificationRepository;
 import in.neupanepralad.esports.tournament.service.TournamentAccessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class CompetitionService {
     private final FixtureRepository fixtureRepository;
     private final FixtureParticipantRepository fixtureParticipantRepository;
     private final TournamentRegistrationRepository registrationRepository;
+    private final StageQualificationRepository qualificationRepository;
     private final TournamentAccessService tournamentAccessService;
 
     @Transactional
@@ -175,11 +177,18 @@ public class CompetitionService {
     public StageResponse generate(UUID stageId, UUID actorId, int groupCount) {
         TournamentStage stage = requireStage(stageId);
         tournamentAccessService.requireManager(stage.getTournament().getId(), actorId);
-        List<TournamentRegistration> registrations = registrationRepository
-                .findAllByTournamentIdAndStatusOrderBySubmittedAtAsc(
-                        stage.getTournament().getId(),
-                        RegistrationStatus.APPROVED
-                );
+        List<TournamentRegistration> registrations =
+                qualificationRepository.findAllByToStageIdOrderBySourceRankAsc(stageId)
+                        .stream()
+                        .map(qualification -> qualification.getRegistration())
+                        .toList();
+        if (registrations.isEmpty()) {
+            registrations = registrationRepository
+                    .findAllByTournamentIdAndStatusOrderBySubmittedAtAsc(
+                            stage.getTournament().getId(),
+                            RegistrationStatus.APPROVED
+                    );
+        }
         if (registrations.size() < 2) {
             throw new BadRequestException("At least two approved registrations are required");
         }
