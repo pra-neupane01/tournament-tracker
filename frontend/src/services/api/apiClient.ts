@@ -44,9 +44,11 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const request = error.config as RetryableRequest | undefined;
-    const isAuthRequest = request?.url?.startsWith('/auth/');
+    const skipsRefresh = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout'].some(
+      (path) => request?.url?.startsWith(path),
+    );
 
-    if (error.response?.status === 401 && request && !request._retry && !isAuthRequest) {
+    if (error.response?.status === 401 && request && !request._retry && !skipsRefresh) {
       request._retry = true;
       try {
         refreshRequest ??= refreshAccessToken().finally(() => {

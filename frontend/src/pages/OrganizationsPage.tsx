@@ -1,5 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Building2, Globe2, Plus, Search, Trash2, UserPlus, Users } from 'lucide-react';
+import {
+  Building2,
+  Edit3,
+  Globe2,
+  Plus,
+  Search,
+  Trash2,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
@@ -28,6 +37,7 @@ export function OrganizationsPage() {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [organization, setOrganization] = useState(emptyOrganization);
   const [member, setMember] = useState<{ email: string; role: MembershipRole }>({
     email: '',
@@ -49,12 +59,24 @@ export function OrganizationsPage() {
   const refreshMembers = () =>
     queryClient.invalidateQueries({ queryKey: ['organization-members', selectedId] });
 
-  const createOrganization = useMutation({
-    mutationFn: organizationService.create,
+  const saveOrganization = useMutation({
+    mutationFn: () =>
+      editingId
+        ? organizationService.update(editingId, organization)
+        : organizationService.create(organization),
     onSuccess: async (created) => {
       setCreateOpen(false);
+      setEditingId(null);
       setOrganization(emptyOrganization);
       setSelectedId(created.id);
+      await queryClient.invalidateQueries({ queryKey: ['organizations'] });
+    },
+    onError: (error) => setNotice(getErrorMessage(error)),
+  });
+  const removeOrganization = useMutation({
+    mutationFn: organizationService.remove,
+    onSuccess: async () => {
+      setSelectedId(null);
       await queryClient.invalidateQueries({ queryKey: ['organizations'] });
     },
     onError: (error) => setNotice(getErrorMessage(error)),
@@ -89,7 +111,7 @@ export function OrganizationsPage() {
   const submitOrganization = (event: FormEvent) => {
     event.preventDefault();
     setNotice('');
-    createOrganization.mutate(organization);
+    saveOrganization.mutate();
   };
 
   return (
@@ -97,7 +119,14 @@ export function OrganizationsPage() {
       title="Organizations & institutions"
       description="Create organizer profiles and manage their members."
       action={
-        <button className="button button-primary" onClick={() => setCreateOpen(true)}>
+        <button
+          className="button button-primary"
+          onClick={() => {
+            setEditingId(null);
+            setOrganization(emptyOrganization);
+            setCreateOpen(true);
+          }}
+        >
           <Plus /> New organization
         </button>
       }
@@ -157,11 +186,38 @@ export function OrganizationsPage() {
 
         {selected && (
           <aside className="panel workspace-detail">
-            <div className="section-heading">
+            <div className="section-heading detail-actions">
               <Users />
               <div>
                 <h2>{selected.name} members</h2>
                 <p>Invite registered users and assign organization access.</p>
+              </div>
+              <div className="review-actions">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditingId(selected.id);
+                    setOrganization({
+                      name: selected.name,
+                      type: selected.type,
+                      description: selected.description ?? '',
+                      website: selected.website ?? '',
+                      country: selected.country ?? '',
+                      city: selected.city ?? '',
+                    });
+                    setCreateOpen(true);
+                  }}
+                  aria-label="Edit organization"
+                >
+                  <Edit3 />
+                </button>
+                <button
+                  className="icon-button danger"
+                  onClick={() => removeOrganization.mutate(selected.id)}
+                  aria-label="Delete organization"
+                >
+                  <Trash2 />
+                </button>
               </div>
             </div>
 
@@ -239,7 +295,11 @@ export function OrganizationsPage() {
         )}
       </div>
 
-      <Modal open={createOpen} title="Create organization" onClose={() => setCreateOpen(false)}>
+      <Modal
+        open={createOpen}
+        title={editingId ? 'Edit organization' : 'Create organization'}
+        onClose={() => setCreateOpen(false)}
+      >
         <form onSubmit={submitOrganization} className="form-stack">
           {notice && <div className="alert alert-error">{notice}</div>}
           <label className="field">
@@ -304,8 +364,12 @@ export function OrganizationsPage() {
               placeholder="https://"
             />
           </label>
-          <button className="button button-primary" disabled={createOrganization.isPending}>
-            {createOrganization.isPending ? 'Creating...' : 'Create organization'}
+          <button className="button button-primary" disabled={saveOrganization.isPending}>
+            {saveOrganization.isPending
+              ? 'Saving...'
+              : editingId
+                ? 'Save organization'
+                : 'Create organization'}
           </button>
         </form>
       </Modal>

@@ -51,6 +51,17 @@ export const tournamentService = {
     );
     return response.data.data;
   },
+  updateRule: async (
+    tournamentId: string,
+    ruleId: string,
+    input: TournamentRuleInput,
+  ) => {
+    const response = await apiClient.put<APIResponse<TournamentRule>>(
+      `/tournaments/${tournamentId}/rules/${ruleId}`,
+      input,
+    );
+    return response.data.data;
+  },
   removeRule: (tournamentId: string, ruleId: string) =>
     apiClient.delete(`/tournaments/${tournamentId}/rules/${ruleId}`),
 };

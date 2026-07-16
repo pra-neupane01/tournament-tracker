@@ -1,31 +1,42 @@
+import type { ComponentType } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { DashboardLayout } from '../../layouts/DashboardLayout';
-import { LandingPage } from '../../pages/LandingPage';
-import { LoginPage } from '../../pages/LoginPage';
-import { DashboardPage } from '../../pages/DashboardPage';
-import { NotFoundPage } from '../../pages/NotFoundPage';
-import { RegisterPage } from '../../pages/RegisterPage';
-import { SettingsPage } from '../../pages/SettingsPage';
 import { ProtectedRoute } from '../../features/auth/ProtectedRoute';
-import { OrganizationsPage } from '../../pages/OrganizationsPage';
-import { UsersPage } from '../../pages/UsersPage';
-import { GamesPage } from '../../pages/GamesPage';
-import { TeamsPage } from '../../pages/TeamsPage';
-import { TournamentsPage } from '../../pages/TournamentsPage';
-import { TournamentDetailPage } from '../../pages/TournamentDetailPage';
+import { DashboardLayout } from '../../layouts/DashboardLayout';
+
+const lazyRoute = (
+  loader: () => Promise<Record<string, unknown>>,
+  exportName: string,
+) => async () => {
+  const module = await loader();
+  return { Component: module[exportName] as ComponentType };
+};
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />,
+    lazy: lazyRoute(() => import('../../pages/LandingPage'), 'LandingPage'),
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    lazy: lazyRoute(() => import('../../pages/LoginPage'), 'LoginPage'),
   },
   {
     path: '/register',
-    element: <RegisterPage />,
+    lazy: lazyRoute(() => import('../../pages/RegisterPage'), 'RegisterPage'),
+  },
+  {
+    path: '/verify-certificate',
+    lazy: lazyRoute(
+      () => import('../../pages/VerifyCertificatePage'),
+      'VerifyCertificatePage',
+    ),
+  },
+  {
+    path: '/verify-certificate/:verificationCode',
+    lazy: lazyRoute(
+      () => import('../../pages/VerifyCertificatePage'),
+      'VerifyCertificatePage',
+    ),
   },
   {
     path: '/',
@@ -36,39 +47,104 @@ export const router = createBrowserRouter([
         children: [
           {
             path: 'dashboard',
-            element: <DashboardPage />,
+            lazy: lazyRoute(() => import('../../pages/DashboardPage'), 'DashboardPage'),
           },
           {
             path: 'organizations',
-            element: <OrganizationsPage />,
+            lazy: lazyRoute(
+              () => import('../../pages/OrganizationsPage'),
+              'OrganizationsPage',
+            ),
           },
           {
             path: 'users',
-            element: <UsersPage />,
+            lazy: lazyRoute(() => import('../../pages/UsersPage'), 'UsersPage'),
           },
           {
             path: 'games',
-            element: <GamesPage />,
-          },
-          {
-            path: 'tournaments',
-            element: <TournamentsPage />,
-          },
-          {
-            path: 'tournaments/:tournamentId',
-            element: <TournamentDetailPage />,
+            lazy: lazyRoute(() => import('../../pages/GamesPage'), 'GamesPage'),
           },
           {
             path: 'teams',
-            element: <TeamsPage />,
+            lazy: lazyRoute(() => import('../../pages/TeamsPage'), 'TeamsPage'),
           },
           {
             path: 'matches',
-            element: <div className="p-6">Matches</div>,
+            lazy: lazyRoute(() => import('../../pages/MatchesPage'), 'MatchesPage'),
+          },
+          {
+            path: 'notifications',
+            lazy: lazyRoute(
+              () => import('../../pages/NotificationsPage'),
+              'NotificationsPage',
+            ),
+          },
+          {
+            path: 'certificates',
+            lazy: lazyRoute(
+              () => import('../../pages/CertificatesPage'),
+              'CertificatesPage',
+            ),
           },
           {
             path: 'settings',
-            element: <SettingsPage />,
+            lazy: lazyRoute(() => import('../../pages/SettingsPage'), 'SettingsPage'),
+          },
+          {
+            path: 'tournaments',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentsPage'),
+              'TournamentsPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentDetailPage'),
+              'TournamentDetailPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/registration-form',
+            lazy: lazyRoute(
+              () => import('../../pages/RegistrationFormBuilderPage'),
+              'RegistrationFormBuilderPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/registrations',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentRegistrationsPage'),
+              'TournamentRegistrationsPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/competition',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentCompetitionPage'),
+              'TournamentCompetitionPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/stages/:stageId/fixtures/:fixtureId',
+            lazy: lazyRoute(
+              () => import('../../pages/MatchOperationsPage'),
+              'MatchOperationsPage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/governance',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentGovernancePage'),
+              'TournamentGovernancePage',
+            ),
+          },
+          {
+            path: 'tournaments/:tournamentId/assets',
+            lazy: lazyRoute(
+              () => import('../../pages/TournamentAssetsPage'),
+              'TournamentAssetsPage',
+            ),
           },
         ],
       },
@@ -76,7 +152,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/not-found',
-    element: <NotFoundPage />,
+    lazy: lazyRoute(() => import('../../pages/NotFoundPage'), 'NotFoundPage'),
   },
   {
     path: '*',

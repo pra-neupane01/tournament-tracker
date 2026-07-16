@@ -1,8 +1,9 @@
-import { Bell, LogOut, Menu, User } from 'lucide-react';
+import { LogOut, Menu, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
+import { NotificationCenter } from '../notifications/NotificationCenter';
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -15,7 +16,11 @@ export function Header() {
   return (
     <header className="h-16 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-between px-6 sticky top-0 z-20">
       <div className="flex items-center gap-4">
-        <button className="md:hidden text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors">
+        <button
+          className="icon-button md:hidden"
+          onClick={onMenuClick}
+          aria-label="Open navigation"
+        >
           <Menu className="h-5 w-5" />
         </button>
         <Link to="/" className="font-bold text-lg text-[var(--color-primary)] tracking-tight">
@@ -24,9 +29,7 @@ export function Header() {
       </div>
       
       <div className="flex items-center gap-4">
-        <button className="icon-button relative" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
-        </button>
+        <NotificationCenter />
         <div className="header-account">
           <div className="avatar">
             <User />

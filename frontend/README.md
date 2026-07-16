@@ -1,32 +1,30 @@
-# React + TypeScript + Vite
+# EsportsManager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19, TypeScript, Vite, Tailwind CSS, TanStack Query, Zustand, React Hook Form, and Zod power the management client.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Set `VITE_API_BASE_URL` in `.env` when the backend is not available at `http://localhost:8080/api/v1`.
+
+## Verification
+
+```bash
+npm run check
+```
+
+This runs Oxlint, TypeScript project compilation, and the optimized Vite production build.
+
+## Implemented Workflows
+
+- JWT login, registration, rotating refresh, protected routes, account restoration, and password changes.
+- Organization/institution CRUD, memberships, platform user administration, games, teams, and rosters.
+- Tournament CRUD, lifecycle management, rules, dynamic registration forms, submissions, and review.
+- Stages, groups, fixture generation, match scheduling, protected rooms, check-in, scoring, results, leaderboards, and qualification.
+- Penalties, disputes, live/persistent notifications, tournament announcements, files, CSV reports, and verifiable PDF certificates.
+
+Feature routes are lazy-loaded, and the authenticated application shell is responsive on mobile and desktop.

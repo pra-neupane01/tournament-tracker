@@ -95,7 +95,7 @@ Once both servers are running, access the application and APIs via:
 
 ---
 
-## Current Backend Scope
+## Implemented Scope
 
 - JWT authentication, rotating refresh tokens, role authorization, and account administration.
 - Organizations, educational institutions, memberships, games, teams, and roster management.
@@ -105,5 +105,6 @@ Once both servers are running, access the application and APIs via:
 - Persistent notifications with authenticated STOMP/WebSocket delivery and organizer announcements.
 - File storage, CSV reports, verifiable PDF certificates, and public certificate verification.
 - Flyway migrations plus isolated unit, integration, migration, and complete lifecycle tests.
+- A complete React management client for every backend workflow, with protected routing, typed API services, automatic token refresh, live notifications, responsive navigation, and lazy-loaded feature routes.
 
-The React frontend currently contains the initial application shell and is the next implementation phase.
+Run `npm run check` inside `frontend` and `mvnw test` inside `backend` for the full verification gates.

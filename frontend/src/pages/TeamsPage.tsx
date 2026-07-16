@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, Shield, Trash2, UserPlus, Users } from 'lucide-react';
+import { Edit3, Plus, Shield, Trash2, UserPlus, Users } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
@@ -38,6 +38,7 @@ export function TeamsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [gameFilter, setGameFilter] = useState('');
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [team, setTeam] = useState(emptyTeam);
   const [member, setMember] = useState(emptyMember);
   const [notice, setNotice] = useState('');
@@ -59,11 +60,13 @@ export function TeamsPage() {
 
   const refreshRoster = () => queryClient.invalidateQueries({ queryKey: ['team-roster', selectedId] });
 
-  const createTeam = useMutation({
-    mutationFn: teamService.create,
+  const saveTeam = useMutation({
+    mutationFn: () =>
+      editingId ? teamService.update(editingId, team) : teamService.create(team),
     onSuccess: async (created) => {
       setTeam(emptyTeam);
       setCreateOpen(false);
+      setEditingId(null);
       setSelectedId(created.id);
       setNotice('');
       await queryClient.invalidateQueries({ queryKey: ['teams'] });
@@ -110,7 +113,7 @@ export function TeamsPage() {
 
   const submitTeam = (event: FormEvent) => {
     event.preventDefault();
-    createTeam.mutate(team);
+    saveTeam.mutate();
   };
 
   return (
@@ -118,7 +121,14 @@ export function TeamsPage() {
       title="Teams & rosters"
       description="Build game-specific teams and maintain competition-ready lineups."
       action={
-        <button className="button button-primary" onClick={() => setCreateOpen(true)}>
+        <button
+          className="button button-primary"
+          onClick={() => {
+            setEditingId(null);
+            setTeam(emptyTeam);
+            setCreateOpen(true);
+          }}
+        >
           <Plus /> Create team
         </button>
       }
@@ -177,13 +187,32 @@ export function TeamsPage() {
                 <h2>{selected.name} roster</h2>
                 <p>Manage player identities, roles, and active status.</p>
               </div>
-              <button
-                className="icon-button danger"
-                onClick={() => removeTeam.mutate(selected.id)}
-                aria-label="Delete team"
-              >
-                <Trash2 />
-              </button>
+              <div className="review-actions">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditingId(selected.id);
+                    setTeam({
+                      name: selected.name,
+                      shortName: selected.shortName ?? '',
+                      logoUrl: selected.logoUrl ?? '',
+                      gameId: selected.gameId,
+                      organizationId: selected.organizationId,
+                    });
+                    setCreateOpen(true);
+                  }}
+                  aria-label="Edit team"
+                >
+                  <Edit3 />
+                </button>
+                <button
+                  className="icon-button danger"
+                  onClick={() => removeTeam.mutate(selected.id)}
+                  aria-label="Delete team"
+                >
+                  <Trash2 />
+                </button>
+              </div>
             </div>
             {notice && <div className="alert alert-error mb-4">{notice}</div>}
             <form
@@ -288,7 +317,11 @@ export function TeamsPage() {
         )}
       </div>
 
-      <Modal open={createOpen} title="Create team" onClose={() => setCreateOpen(false)}>
+      <Modal
+        open={createOpen}
+        title={editingId ? 'Edit team' : 'Create team'}
+        onClose={() => setCreateOpen(false)}
+      >
         <form className="form-stack" onSubmit={submitTeam}>
           {notice && <div className="alert alert-error">{notice}</div>}
           <div className="form-grid">
@@ -347,8 +380,12 @@ export function TeamsPage() {
               onChange={(event) => setTeam({ ...team, logoUrl: event.target.value })}
             />
           </label>
-          <button className="button button-primary" disabled={createTeam.isPending}>
-            {createTeam.isPending ? 'Creating...' : 'Create team'}
+          <button className="button button-primary" disabled={saveTeam.isPending}>
+            {saveTeam.isPending
+              ? 'Saving...'
+              : editingId
+                ? 'Save team'
+                : 'Create team'}
           </button>
         </form>
       </Modal>

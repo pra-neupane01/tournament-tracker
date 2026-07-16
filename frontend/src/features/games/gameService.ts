@@ -17,4 +17,5 @@ export const gameService = {
     const response = await apiClient.put<APIResponse<Game>>(`/games/${gameId}`, input);
     return response.data.data;
   },
+  remove: (gameId: string) => apiClient.delete(`/games/${gameId}`),
 };

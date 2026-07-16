@@ -13,6 +13,10 @@ export const teamService = {
     const response = await apiClient.post<APIResponse<Team>>('/teams', input);
     return response.data.data;
   },
+  update: async (teamId: string, input: TeamInput) => {
+    const response = await apiClient.put<APIResponse<Team>>(`/teams/${teamId}`, input);
+    return response.data.data;
+  },
   remove: (teamId: string) => apiClient.delete(`/teams/${teamId}`),
   roster: async (teamId: string) => {
     const response = await apiClient.get<APIResponse<RosterMember[]>>(`/teams/${teamId}/roster`);

@@ -19,6 +19,15 @@ export const organizationService = {
     const response = await apiClient.post<APIResponse<Organization>>('/organizations', input);
     return response.data.data;
   },
+  update: async (organizationId: string, input: OrganizationInput) => {
+    const response = await apiClient.put<APIResponse<Organization>>(
+      `/organizations/${organizationId}`,
+      input,
+    );
+    return response.data.data;
+  },
+  remove: (organizationId: string) =>
+    apiClient.delete(`/organizations/${organizationId}`),
   members: async (organizationId: string) => {
     const response = await apiClient.get<APIResponse<Membership[]>>(
       `/organizations/${organizationId}/members`,

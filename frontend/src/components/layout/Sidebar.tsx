@@ -5,6 +5,7 @@ import {
   Calendar,
   Gamepad2,
   LayoutDashboard,
+  Medal,
   Settings,
   Shield,
   Trophy,
@@ -19,10 +20,14 @@ const navItems = [
   { name: 'Tournaments', path: '/tournaments', icon: Trophy },
   { name: 'Teams', path: '/teams', icon: Users },
   { name: 'Matches', path: '/matches', icon: Calendar },
+  { name: 'Certificates', path: '/certificates', icon: Medal },
   { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
-export const Sidebar: FC = () => {
+export const Sidebar: FC<{ mobileOpen?: boolean; onNavigate?: () => void }> = ({
+  mobileOpen = false,
+  onNavigate,
+}) => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const visibleItems =
@@ -31,7 +36,9 @@ export const Sidebar: FC = () => {
       : navItems;
 
   return (
-    <aside className="w-64 border-r border-[var(--color-border)] bg-[var(--color-surface)] hidden md:flex flex-col h-[calc(100vh-4rem)] sticky top-16">
+    <aside
+      className={`sidebar-shell ${mobileOpen ? 'flex' : 'hidden'} md:flex`}
+    >
       <nav className="flex-1 px-4 py-6 space-y-1">
         {visibleItems.map((item) => {
           const Icon = item.icon;
@@ -41,6 +48,7 @@ export const Sidebar: FC = () => {
             <Link
               key={item.name}
               to={item.path}
+              onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors text-sm font-medium ${
                 isActive 
                   ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]' 

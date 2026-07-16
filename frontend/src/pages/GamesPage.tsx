@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Gamepad2, MonitorSmartphone, Plus } from 'lucide-react';
+import { Edit3, Gamepad2, MonitorSmartphone, Plus, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
@@ -25,26 +25,34 @@ export function GamesPage() {
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [game, setGame] = useState(emptyGame);
   const [notice, setNotice] = useState('');
   const games = useQuery({
     queryKey: ['games', user?.role],
     queryFn: () => gameService.list(user?.role === 'SUPER_ADMIN'),
   });
-  const createGame = useMutation({
-    mutationFn: gameService.create,
+  const saveGame = useMutation({
+    mutationFn: () =>
+      editingId ? gameService.update(editingId, game) : gameService.create(game),
     onSuccess: async () => {
       setOpen(false);
+      setEditingId(null);
       setGame(emptyGame);
       setNotice('');
       await queryClient.invalidateQueries({ queryKey: ['games'] });
     },
     onError: (error) => setNotice(getErrorMessage(error)),
   });
+  const removeGame = useMutation({
+    mutationFn: gameService.remove,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games'] }),
+    onError: (error) => setNotice(getErrorMessage(error)),
+  });
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    createGame.mutate(game);
+    saveGame.mutate();
   };
 
   return (
@@ -53,7 +61,14 @@ export function GamesPage() {
       description="Competition titles and their roster constraints."
       action={
         user?.role === 'SUPER_ADMIN' ? (
-          <button className="button button-primary" onClick={() => setOpen(true)}>
+          <button
+            className="button button-primary"
+            onClick={() => {
+              setEditingId(null);
+              setGame(emptyGame);
+              setOpen(true);
+            }}
+          >
             <Plus /> Add game
           </button>
         ) : null
@@ -80,11 +95,45 @@ export function GamesPage() {
                 <MonitorSmartphone /> {item.teamSize} starters · {item.substituteLimit} substitutes
               </span>
             </div>
+            {user?.role === 'SUPER_ADMIN' && (
+              <div className="resource-actions">
+                <button
+                  className="icon-button"
+                  onClick={() => {
+                    setEditingId(item.id);
+                    setGame({
+                      name: item.name,
+                      slug: item.slug,
+                      platform: item.platform,
+                      teamSize: item.teamSize,
+                      substituteLimit: item.substituteLimit,
+                      description: item.description ?? '',
+                      active: item.active,
+                    });
+                    setOpen(true);
+                  }}
+                  aria-label={`Edit ${item.name}`}
+                >
+                  <Edit3 />
+                </button>
+                <button
+                  className="icon-button danger"
+                  onClick={() => removeGame.mutate(item.id)}
+                  aria-label={`Delete ${item.name}`}
+                >
+                  <Trash2 />
+                </button>
+              </div>
+            )}
           </article>
         ))}
       </div>
 
-      <Modal open={open} title="Add competition game" onClose={() => setOpen(false)}>
+      <Modal
+        open={open}
+        title={editingId ? 'Edit competition game' : 'Add competition game'}
+        onClose={() => setOpen(false)}
+      >
         <form className="form-stack" onSubmit={submit}>
           {notice && <div className="alert alert-error">{notice}</div>}
           <div className="form-grid">
@@ -162,8 +211,16 @@ export function GamesPage() {
               onChange={(event) => setGame({ ...game, description: event.target.value })}
             />
           </label>
-          <button className="button button-primary" disabled={createGame.isPending}>
-            {createGame.isPending ? 'Saving...' : 'Save game'}
+          <label className="checkbox-field">
+            <input
+              type="checkbox"
+              checked={game.active}
+              onChange={(event) => setGame({ ...game, active: event.target.checked })}
+            />
+            Active game
+          </label>
+          <button className="button button-primary" disabled={saveGame.isPending}>
+            {saveGame.isPending ? 'Saving...' : 'Save game'}
           </button>
         </form>
       </Modal>

@@ -2,11 +2,13 @@ import { RouterProvider } from 'react-router-dom';
 import { QueryProvider } from './app/providers/QueryProvider';
 import { router } from './app/router';
 import { SessionBootstrap } from './features/auth/SessionBootstrap';
+import { NotificationStream } from './features/notifications/NotificationStream';
 
 function App() {
   return (
     <QueryProvider>
       <SessionBootstrap>
+        <NotificationStream />
         <RouterProvider router={router} />
       </SessionBootstrap>
     </QueryProvider>
