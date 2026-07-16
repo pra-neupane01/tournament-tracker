@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "fixtures")
 @Getter
@@ -40,4 +42,19 @@ public class Fixture extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_registration_id")
     private TournamentRegistration winner;
+
+    private LocalDateTime scheduledAt;
+
+    @Column(nullable = false)
+    private int durationMinutes = 60;
+
+    private LocalDateTime checkInOpensAt;
+
+    private LocalDateTime checkInClosesAt;
+
+    @Column(length = 255)
+    private String venue;
+
+    @Column(length = 500)
+    private String streamUrl;
 }

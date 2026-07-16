@@ -9,6 +9,10 @@ import java.util.UUID;
 public interface FixtureParticipantRepository extends JpaRepository<FixtureParticipant, UUID> {
     List<FixtureParticipant> findAllByFixtureIdOrderBySlotNumberAsc(UUID fixtureId);
 
+    List<FixtureParticipant> findAllByRegistrationId(UUID registrationId);
+
+    boolean existsByFixtureIdAndRegistrationId(UUID fixtureId, UUID registrationId);
+
     void deleteAllByFixtureStageId(UUID stageId);
 
     void deleteAllByFixtureId(UUID fixtureId);
