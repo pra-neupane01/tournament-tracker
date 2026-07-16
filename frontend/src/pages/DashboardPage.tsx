@@ -1,12 +1,15 @@
 import type { FC } from 'react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Trophy, Users, Calendar, Clock } from 'lucide-react';
+import { useAuthStore } from '../features/auth/authStore';
 
 export const DashboardPage: FC = () => {
+  const user = useAuthStore((state) => state.user);
+
   return (
     <PageContainer 
-      title="Organizer Dashboard" 
-      description="Welcome back! Here's an overview of your tournaments."
+      title={`Welcome, ${user?.fullName?.split(' ')[0] ?? 'competitor'}`}
+      description="Your tournament operations and competition activity will appear here."
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Placeholder summary cards */}

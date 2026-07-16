@@ -9,6 +9,8 @@
   --color-text-main: #f8fafc;
   --color-text-muted: #94a3b8;
   --color-border: #334155;
+  --color-danger: #f87171;
+  --color-success: #34d399;
 }
 
 @layer base {
@@ -19,5 +21,175 @@
   
   body {
     @apply antialiased min-h-screen font-sans m-0;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .auth-page {
+    @apply min-h-screen flex items-center justify-center p-6 bg-[var(--color-background)];
+  }
+
+  .auth-card {
+    @apply w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-2xl space-y-6;
+  }
+
+  .auth-card h1 {
+    @apply text-2xl font-bold;
+  }
+
+  .auth-card p {
+    @apply text-sm text-[var(--color-text-muted)] mt-1;
+  }
+
+  .auth-logo {
+    @apply mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-primary)];
+  }
+
+  .auth-logo svg {
+    @apply h-7 w-7;
+  }
+
+  .auth-switch {
+    @apply text-center;
+  }
+
+  .auth-switch a {
+    @apply font-semibold text-[var(--color-primary)] hover:underline;
+  }
+
+  .form-stack {
+    @apply flex flex-col gap-4;
+  }
+
+  .field {
+    @apply flex flex-col gap-2 text-sm font-medium;
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    @apply w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2.5 text-[var(--color-text-main)] outline-none transition-colors;
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    @apply border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20;
+  }
+
+  .field small {
+    @apply font-normal text-[var(--color-danger)];
+  }
+
+  .button {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .button svg {
+    @apply h-4 w-4;
+  }
+
+  .button-primary {
+    @apply bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)];
+  }
+
+  .button-secondary {
+    @apply border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)];
+  }
+
+  .icon-button {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-main)];
+  }
+
+  .icon-button svg {
+    @apply h-4 w-4;
+  }
+
+  .alert {
+    @apply rounded-lg border px-4 py-3 text-sm;
+  }
+
+  .alert-error {
+    @apply border-red-500/30 bg-red-500/10 text-red-300;
+  }
+
+  .alert-success {
+    @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-300;
+  }
+
+  .panel {
+    @apply rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6;
+  }
+
+  .section-heading {
+    @apply mb-6 flex items-start gap-3;
+  }
+
+  .section-heading > svg {
+    @apply mt-0.5 h-5 w-5 text-[var(--color-primary)];
+  }
+
+  .section-heading h2 {
+    @apply font-semibold;
+  }
+
+  .section-heading p {
+    @apply text-sm text-[var(--color-text-muted)];
+  }
+
+  .settings-grid {
+    @apply grid gap-6 lg:grid-cols-2;
+  }
+
+  .detail-list {
+    @apply divide-y divide-[var(--color-border)];
+  }
+
+  .detail-list div {
+    @apply flex items-center justify-between gap-4 py-3;
+  }
+
+  .detail-list dt {
+    @apply text-sm text-[var(--color-text-muted)];
+  }
+
+  .detail-list dd {
+    @apply text-sm font-medium capitalize;
+  }
+
+  .header-account {
+    @apply flex items-center gap-2;
+  }
+
+  .header-account strong,
+  .header-account span {
+    @apply block max-w-40 truncate;
+  }
+
+  .header-account strong {
+    @apply text-xs;
+  }
+
+  .header-account span {
+    @apply text-[10px] capitalize text-[var(--color-text-muted)];
+  }
+
+  .avatar {
+    @apply flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-background)];
+  }
+
+  .avatar svg {
+    @apply h-4 w-4 text-[var(--color-text-muted)];
   }
 }

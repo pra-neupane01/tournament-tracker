@@ -4,6 +4,9 @@ import { LandingPage } from '../../pages/LandingPage';
 import { LoginPage } from '../../pages/LoginPage';
 import { DashboardPage } from '../../pages/DashboardPage';
 import { NotFoundPage } from '../../pages/NotFoundPage';
+import { RegisterPage } from '../../pages/RegisterPage';
+import { SettingsPage } from '../../pages/SettingsPage';
+import { ProtectedRoute } from '../../features/auth/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
@@ -15,29 +18,37 @@ export const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  {
     path: '/',
-    element: <DashboardLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        path: 'dashboard',
-        element: <DashboardPage />,
-      },
-      // Placeholders for future features
-      {
-        path: 'tournaments',
-        element: <div className="p-6">Tournaments (Coming in Chunk 3)</div>,
-      },
-      {
-        path: 'teams',
-        element: <div className="p-6">Teams (Coming in Chunk 3)</div>,
-      },
-      {
-        path: 'matches',
-        element: <div className="p-6">Matches (Coming in Chunk 3)</div>,
-      },
-      {
-        path: 'settings',
-        element: <div className="p-6">Settings (Coming in Chunk 2)</div>,
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: 'dashboard',
+            element: <DashboardPage />,
+          },
+          {
+            path: 'tournaments',
+            element: <div className="p-6">Tournaments</div>,
+          },
+          {
+            path: 'teams',
+            element: <div className="p-6">Teams</div>,
+          },
+          {
+            path: 'matches',
+            element: <div className="p-6">Matches</div>,
+          },
+          {
+            path: 'settings',
+            element: <SettingsPage />,
+          },
+        ],
       },
     ],
   },

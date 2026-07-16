@@ -1,8 +1,17 @@
-import type { FC } from 'react';
-import { Menu, User, Bell } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Bell, LogOut, Menu, User } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../features/auth/authStore';
 
-export const Header: FC = () => {
+export function Header() {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const signOut = async () => {
+    await logout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <header className="h-16 border-b border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-between px-6 sticky top-0 z-20">
       <div className="flex items-center gap-4">
@@ -15,14 +24,22 @@ export const Header: FC = () => {
       </div>
       
       <div className="flex items-center gap-4">
-        <button className="text-[var(--color-text-muted)] hover:text-[var(--color-text-main)] transition-colors relative">
+        <button className="icon-button relative" aria-label="Notifications">
           <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-[var(--color-surface)]"></span>
         </button>
-        <div className="h-8 w-8 rounded-full bg-[var(--color-background)] flex items-center justify-center border border-[var(--color-border)]">
-          <User className="h-4 w-4 text-[var(--color-text-muted)]" />
+        <div className="header-account">
+          <div className="avatar">
+            <User />
+          </div>
+          <div className="hidden sm:block">
+            <strong>{user?.fullName ?? 'Account'}</strong>
+            <span>{user?.role.replaceAll('_', ' ')}</span>
+          </div>
+          <button className="icon-button" onClick={() => void signOut()} aria-label="Sign out">
+            <LogOut />
+          </button>
         </div>
       </div>
     </header>
   );
-};
+}

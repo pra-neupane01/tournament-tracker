@@ -34,10 +34,10 @@ export const LandingPage: FC = () => {
             <ArrowRight className="h-5 w-5" />
           </Link>
           <Link 
-            to="/dashboard"
+            to="/register"
             className="w-full sm:w-auto px-8 py-3.5 bg-[var(--color-surface)] text-[var(--color-text-main)] font-semibold rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] transition-all flex items-center justify-center gap-2"
           >
-            Explore Tournaments
+            Create an account
           </Link>
         </div>
       </div>
