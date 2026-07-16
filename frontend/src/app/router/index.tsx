@@ -7,6 +7,8 @@ import { NotFoundPage } from '../../pages/NotFoundPage';
 import { RegisterPage } from '../../pages/RegisterPage';
 import { SettingsPage } from '../../pages/SettingsPage';
 import { ProtectedRoute } from '../../features/auth/ProtectedRoute';
+import { OrganizationsPage } from '../../pages/OrganizationsPage';
+import { UsersPage } from '../../pages/UsersPage';
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ export const router = createBrowserRouter([
           {
             path: 'dashboard',
             element: <DashboardPage />,
+          },
+          {
+            path: 'organizations',
+            element: <OrganizationsPage />,
+          },
+          {
+            path: 'users',
+            element: <UsersPage />,
           },
           {
             path: 'tournaments',

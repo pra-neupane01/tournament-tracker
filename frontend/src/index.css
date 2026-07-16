@@ -192,4 +192,177 @@
   .avatar svg {
     @apply h-4 w-4 text-[var(--color-text-muted)];
   }
+
+  .modal-backdrop {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm;
+  }
+
+  .modal-card {
+    @apply max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-2xl;
+  }
+
+  .modal-card > header {
+    @apply mb-6 flex items-center justify-between gap-4;
+  }
+
+  .modal-card > header h2 {
+    @apply text-lg font-bold;
+  }
+
+  .page-toolbar {
+    @apply mb-6 flex flex-wrap items-center justify-between gap-3;
+  }
+
+  .search-box {
+    @apply flex min-w-64 flex-1 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3;
+  }
+
+  .search-box svg {
+    @apply h-4 w-4 text-[var(--color-text-muted)];
+  }
+
+  .search-box input {
+    @apply w-full bg-transparent py-2.5 text-sm outline-none;
+  }
+
+  .split-workspace {
+    @apply grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.7fr)];
+  }
+
+  .card-grid {
+    @apply grid gap-4 md:grid-cols-2;
+  }
+
+  .resource-card {
+    @apply flex w-full items-start gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-left transition hover:-translate-y-0.5 hover:border-[var(--color-primary)]/60;
+  }
+
+  .resource-card-active {
+    @apply border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20;
+  }
+
+  .resource-icon {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)];
+  }
+
+  .resource-icon svg {
+    @apply h-5 w-5;
+  }
+
+  .resource-card > div:last-child {
+    @apply min-w-0 flex-1;
+  }
+
+  .resource-title {
+    @apply flex items-start justify-between gap-3;
+  }
+
+  .resource-title h2 {
+    @apply truncate font-semibold;
+  }
+
+  .resource-card p {
+    @apply mt-1 text-xs capitalize text-[var(--color-text-muted)];
+  }
+
+  .resource-card > div:last-child > span {
+    @apply mt-4 flex items-center gap-1.5 text-xs text-[var(--color-text-muted)];
+  }
+
+  .resource-card span svg {
+    @apply h-3.5 w-3.5;
+  }
+
+  .badge {
+    @apply inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide;
+  }
+
+  .badge-success {
+    @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-300;
+  }
+
+  .badge-warning {
+    @apply border-amber-500/30 bg-amber-500/10 text-amber-300;
+  }
+
+  .workspace-detail {
+    @apply sticky top-22;
+  }
+
+  .inline-form {
+    @apply mb-5 grid gap-2 sm:grid-cols-[1fr_auto_auto];
+  }
+
+  .inline-form input,
+  .inline-form select,
+  .member-row select,
+  .data-table select {
+    @apply rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-sm outline-none;
+  }
+
+  .member-list {
+    @apply mt-4 divide-y divide-[var(--color-border)];
+  }
+
+  .member-row {
+    @apply grid grid-cols-[1fr_auto_auto] items-center gap-3 py-3;
+  }
+
+  .member-row strong,
+  .member-row span {
+    @apply block;
+  }
+
+  .member-row strong {
+    @apply text-sm;
+  }
+
+  .member-row span {
+    @apply text-xs text-[var(--color-text-muted)];
+  }
+
+  .danger {
+    @apply hover:bg-red-500/10 hover:text-red-400;
+  }
+
+  .form-grid {
+    @apply grid gap-4 sm:grid-cols-2;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)];
+  }
+
+  .data-table {
+    @apply w-full min-w-[760px] border-collapse text-left text-sm;
+  }
+
+  .data-table th {
+    @apply border-b border-[var(--color-border)] px-4 py-3 text-xs uppercase tracking-wide text-[var(--color-text-muted)];
+  }
+
+  .data-table td {
+    @apply border-b border-[var(--color-border)] px-4 py-3;
+  }
+
+  .data-table tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .table-primary {
+    @apply flex items-center gap-3;
+  }
+
+  .table-primary > svg {
+    @apply h-5 w-5 text-[var(--color-primary)];
+  }
+
+  .table-primary strong,
+  .table-primary span {
+    @apply block;
+  }
+
+  .table-primary span {
+    @apply text-xs text-[var(--color-text-muted)];
+  }
 }
