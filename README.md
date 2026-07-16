@@ -8,7 +8,7 @@ A comprehensive, production-ready platform designed to help colleges, schools, a
 - Java 21 / Spring Boot 4.1.0
 - Spring Web, Spring Data JPA, Spring Security
 - PostgreSQL with Hibernate-managed local schema updates
-- Spring WebSocket & Spring Data Redis
+- Spring WebSocket
 - Swagger / Springdoc OpenAPI
 
 **Frontend:**
