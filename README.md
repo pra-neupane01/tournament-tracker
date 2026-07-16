@@ -95,13 +95,15 @@ Once both servers are running, access the application and APIs via:
 
 ---
 
-## Current Implemented Scope (Chunk 1)
-- Clean project initialization and environment setup.
-- Backend architectural foundation (common entities, generic API responses, global exception handlers, pagination, Flyway integration).
-- Baseline security configurations and dynamic CORS logic.
-- Complete frontend scaffolding (React Router, TanStack Query, Tailwind Dark Theme).
-- Responsive UI layouts (Header, Sidebar, Dashboard) and initial visual pages (Landing, Login, 404).
+## Current Backend Scope
 
-## Planned Next Feature (Chunk 2)
-- Implementation of the comprehensive Authentication & Authorization system.
-- JWT security filter chain, token generation, refresh tokens, and domain-specific roles (Super Admin, Organizer, Referee, Player).
+- JWT authentication, rotating refresh tokens, role authorization, and account administration.
+- Organizations, educational institutions, memberships, games, teams, and roster management.
+- Tournament CRUD, lifecycle rules, dynamic registration forms, application review, and roster snapshots.
+- Stages, groups, fixture generation, scheduling, protected rooms, and participant check-in.
+- Scoring rules, result review, leaderboards, qualification, penalties, and disputes.
+- Persistent notifications with authenticated STOMP/WebSocket delivery and organizer announcements.
+- File storage, CSV reports, verifiable PDF certificates, and public certificate verification.
+- Flyway migrations plus isolated unit, integration, migration, and complete lifecycle tests.
+
+The React frontend currently contains the initial application shell and is the next implementation phase.

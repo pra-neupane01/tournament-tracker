@@ -1,10 +1,9 @@
-ALTER TABLE fixtures
-    ADD COLUMN scheduled_at TIMESTAMP,
-    ADD COLUMN duration_minutes INTEGER NOT NULL DEFAULT 60,
-    ADD COLUMN check_in_opens_at TIMESTAMP,
-    ADD COLUMN check_in_closes_at TIMESTAMP,
-    ADD COLUMN venue VARCHAR(255),
-    ADD COLUMN stream_url VARCHAR(500);
+ALTER TABLE fixtures ADD COLUMN scheduled_at TIMESTAMP;
+ALTER TABLE fixtures ADD COLUMN duration_minutes INTEGER NOT NULL DEFAULT 60;
+ALTER TABLE fixtures ADD COLUMN check_in_opens_at TIMESTAMP;
+ALTER TABLE fixtures ADD COLUMN check_in_closes_at TIMESTAMP;
+ALTER TABLE fixtures ADD COLUMN venue VARCHAR(255);
+ALTER TABLE fixtures ADD COLUMN stream_url VARCHAR(500);
 
 CREATE TABLE match_rooms (
     id UUID PRIMARY KEY,

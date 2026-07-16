@@ -157,12 +157,10 @@ public class ResultService {
         submission.setReviewNotes(request.reviewNotes());
 
         if (request.status() == ResultSubmissionStatus.CONFIRMED) {
-            submissionRepository.findAllByFixtureIdAndStatus(
-                            fixture.getId(),
-                            ResultSubmissionStatus.PENDING
-                    )
+            submissionRepository.findAllByFixtureIdOrderBySubmittedAtDesc(fixture.getId())
                     .stream()
                     .filter(other -> !other.getId().equals(submissionId))
+                    .filter(other -> other.getStatus() != ResultSubmissionStatus.REJECTED)
                     .forEach(other -> {
                         other.setStatus(ResultSubmissionStatus.REJECTED);
                         other.setReviewedBy(submission.getReviewedBy());

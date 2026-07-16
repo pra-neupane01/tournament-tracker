@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
@@ -114,7 +115,9 @@ public class AuthService {
         refreshToken.setUser(user);
         refreshToken.setTokenHash(hashToken(rawRefreshToken));
         refreshToken.setExpiresAt(
-                LocalDateTime.now(ZoneOffset.UTC).plusNanos(refreshTokenExpirationMs * 1_000_000)
+                LocalDateTime.now(ZoneOffset.UTC).plus(
+                        Duration.ofMillis(refreshTokenExpirationMs)
+                )
         );
         refreshTokenRepository.save(refreshToken);
         return new AuthResponse(
