@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Building2,
   Calendar,
+  Gamepad2,
   LayoutDashboard,
   Settings,
   Shield,
@@ -14,6 +15,7 @@ import { useAuthStore } from '../../features/auth/authStore';
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'Organizations', path: '/organizations', icon: Building2 },
+  { name: 'Games', path: '/games', icon: Gamepad2 },
   { name: 'Tournaments', path: '/tournaments', icon: Trophy },
   { name: 'Teams', path: '/teams', icon: Users },
   { name: 'Matches', path: '/matches', icon: Calendar },

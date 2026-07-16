@@ -9,6 +9,8 @@ import { SettingsPage } from '../../pages/SettingsPage';
 import { ProtectedRoute } from '../../features/auth/ProtectedRoute';
 import { OrganizationsPage } from '../../pages/OrganizationsPage';
 import { UsersPage } from '../../pages/UsersPage';
+import { GamesPage } from '../../pages/GamesPage';
+import { TeamsPage } from '../../pages/TeamsPage';
 
 export const router = createBrowserRouter([
   {
@@ -43,12 +45,16 @@ export const router = createBrowserRouter([
             element: <UsersPage />,
           },
           {
+            path: 'games',
+            element: <GamesPage />,
+          },
+          {
             path: 'tournaments',
             element: <div className="p-6">Tournaments</div>,
           },
           {
             path: 'teams',
-            element: <div className="p-6">Teams</div>,
+            element: <TeamsPage />,
           },
           {
             path: 'matches',

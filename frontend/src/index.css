@@ -365,4 +365,43 @@
   .table-primary span {
     @apply text-xs text-[var(--color-text-muted)];
   }
+
+  .compact-field {
+    @apply min-w-56;
+  }
+
+  .detail-actions {
+    @apply grid grid-cols-[auto_1fr_auto];
+  }
+
+  .roster-form {
+    @apply mb-5 rounded-xl border border-[var(--color-border)] bg-[var(--color-background)]/40 p-4;
+  }
+
+  .roster-row {
+    @apply grid grid-cols-[minmax(0,1fr)_auto_auto_auto] items-center gap-3 py-3;
+  }
+
+  .roster-row strong,
+  .roster-row span {
+    @apply block;
+  }
+
+  .roster-row span {
+    @apply truncate text-xs text-[var(--color-text-muted)];
+  }
+
+  .roster-row select {
+    @apply rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-2 py-1.5 text-xs;
+  }
+
+  .active-toggle {
+    @apply flex items-center gap-1.5 text-xs text-[var(--color-text-muted)];
+  }
+
+  @media (max-width: 640px) {
+    .roster-row {
+      @apply grid-cols-[1fr_auto];
+    }
+  }
 }
