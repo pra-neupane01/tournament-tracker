@@ -7,7 +7,7 @@ A comprehensive, production-ready platform designed to help colleges, schools, a
 **Backend:**
 - Java 21 / Spring Boot 4.1.0
 - Spring Web, Spring Data JPA, Spring Security
-- PostgreSQL & Flyway (Schema evolution)
+- PostgreSQL with Hibernate-managed local schema updates
 - Spring WebSocket & Spring Data Redis
 - Swagger / Springdoc OpenAPI
 
@@ -39,11 +39,14 @@ esports-management-system/
 
 ### 1. Database Configuration
 Ensure PostgreSQL is running on your machine.
-Create a local database named `esports_management`.
+Create a local database named `esports_management_app`.
 ```bash
 # Example psql command
-psql -U postgres -c "CREATE DATABASE esports_management;"
+psql -U postgres -c "CREATE DATABASE esports_management_app;"
 ```
+
+Hibernate creates and updates application tables automatically during this development phase.
+Database migrations are intentionally not enabled.
 
 ### 2. Backend Setup
 The backend uses standard environment variables that fall back to sensible defaults. You can override them via the `.env` file.
@@ -104,7 +107,7 @@ Once both servers are running, access the application and APIs via:
 - Scoring rules, result review, leaderboards, qualification, penalties, and disputes.
 - Persistent notifications with authenticated STOMP/WebSocket delivery and organizer announcements.
 - File storage, CSV reports, verifiable PDF certificates, and public certificate verification.
-- Flyway migrations plus isolated unit, integration, migration, and complete lifecycle tests.
+- Isolated unit, integration, and complete lifecycle tests.
 - A complete React management client for every backend workflow, with protected routing, typed API services, automatic token refresh, live notifications, responsive navigation, and lazy-loaded feature routes.
 
 Run `npm run check` inside `frontend` and `mvnw test` inside `backend` for the full verification gates.
