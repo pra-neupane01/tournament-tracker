@@ -11,6 +11,8 @@ import { OrganizationsPage } from '../../pages/OrganizationsPage';
 import { UsersPage } from '../../pages/UsersPage';
 import { GamesPage } from '../../pages/GamesPage';
 import { TeamsPage } from '../../pages/TeamsPage';
+import { TournamentsPage } from '../../pages/TournamentsPage';
+import { TournamentDetailPage } from '../../pages/TournamentDetailPage';
 
 export const router = createBrowserRouter([
   {
@@ -50,7 +52,11 @@ export const router = createBrowserRouter([
           },
           {
             path: 'tournaments',
-            element: <div className="p-6">Tournaments</div>,
+            element: <TournamentsPage />,
+          },
+          {
+            path: 'tournaments/:tournamentId',
+            element: <TournamentDetailPage />,
           },
           {
             path: 'teams',

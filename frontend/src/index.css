@@ -108,6 +108,10 @@
     @apply border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-[var(--color-surface-hover)];
   }
 
+  .button-danger {
+    @apply border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20;
+  }
+
   .icon-button {
     @apply inline-flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text-main)];
   }
@@ -403,5 +407,144 @@
     .roster-row {
       @apply grid-cols-[1fr_auto];
     }
+  }
+
+  .tournament-filters {
+    @apply grid grid-cols-1 md:grid-cols-[minmax(280px,1fr)_auto_auto];
+  }
+
+  .tournament-filters > select {
+    @apply rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm;
+  }
+
+  .tournament-grid {
+    @apply grid gap-5 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .tournament-card {
+    @apply flex min-h-64 flex-col justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition hover:-translate-y-1 hover:border-[var(--color-primary)]/60 hover:shadow-xl;
+  }
+
+  .tournament-card-top,
+  .tournament-card-meta,
+  .tournament-meta,
+  .tournament-actions,
+  .panel-title-row {
+    @apply flex items-center justify-between gap-4;
+  }
+
+  .tournament-card h2 {
+    @apply mt-2 text-xl font-bold;
+  }
+
+  .tournament-card p {
+    @apply mt-1 text-sm capitalize text-[var(--color-text-muted)];
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-primary)];
+  }
+
+  .status-pill {
+    @apply inline-flex rounded-full border border-[var(--color-primary)]/30 bg-[var(--color-primary)]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-blue-300;
+  }
+
+  .tournament-card-meta {
+    @apply items-start border-t border-[var(--color-border)] pt-4 text-xs text-[var(--color-text-muted)];
+  }
+
+  .tournament-card-meta span,
+  .tournament-meta span {
+    @apply flex items-center gap-1.5;
+  }
+
+  .tournament-card-meta svg,
+  .tournament-meta svg {
+    @apply h-3.5 w-3.5;
+  }
+
+  .check-row {
+    @apply flex flex-wrap gap-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3;
+  }
+
+  .check-row label {
+    @apply flex items-center gap-2 text-sm;
+  }
+
+  .tournament-page {
+    @apply min-h-full;
+  }
+
+  .tournament-hero {
+    @apply border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-8;
+  }
+
+  .tournament-hero,
+  .tournament-page-body {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .back-link {
+    @apply mb-6 inline-flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-main)];
+  }
+
+  .back-link svg {
+    @apply h-4 w-4;
+  }
+
+  .tournament-hero-content {
+    @apply flex flex-col justify-between gap-5 md:flex-row md:items-end;
+  }
+
+  .tournament-hero h1 {
+    @apply mt-2 text-3xl font-extrabold tracking-tight md:text-4xl;
+  }
+
+  .tournament-meta {
+    @apply mt-4 justify-start text-sm text-[var(--color-text-muted)];
+  }
+
+  .tournament-page-body {
+    @apply p-6;
+  }
+
+  .tournament-actions {
+    @apply mb-6 items-end;
+  }
+
+  .overview-grid {
+    @apply grid gap-6 lg:grid-cols-2;
+  }
+
+  .rules-panel {
+    @apply mt-6;
+  }
+
+  .panel-title-row {
+    @apply items-start;
+  }
+
+  .rule-list {
+    @apply divide-y divide-[var(--color-border)];
+  }
+
+  .rule-list article {
+    @apply flex items-start justify-between gap-4 py-5;
+  }
+
+  .rule-list article > div {
+    @apply flex items-start gap-4;
+  }
+
+  .rule-list article > div > span {
+    @apply flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]/10 text-xs font-bold text-[var(--color-primary)];
+  }
+
+  .rule-list h3 {
+    @apply font-semibold;
+  }
+
+  .rule-list p {
+    @apply mt-1 whitespace-pre-wrap text-sm leading-6 text-[var(--color-text-muted)];
   }
 }
