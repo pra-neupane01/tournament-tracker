@@ -14,6 +14,9 @@ import in.neupanepralad.esports.leaderboard.dto.QualificationRequest;
 import in.neupanepralad.esports.leaderboard.dto.QualificationResponse;
 import in.neupanepralad.esports.leaderboard.model.StageQualification;
 import in.neupanepralad.esports.leaderboard.repository.StageQualificationRepository;
+import in.neupanepralad.esports.governance.model.PenaltyStatus;
+import in.neupanepralad.esports.governance.model.PenaltyType;
+import in.neupanepralad.esports.governance.repository.PenaltyRepository;
 import in.neupanepralad.esports.registration.workflow.model.TournamentRegistration;
 import in.neupanepralad.esports.registration.workflow.repository.TournamentRegistrationRepository;
 import in.neupanepralad.esports.result.model.ParticipantResult;
@@ -47,6 +50,7 @@ public class LeaderboardService {
     private final ParticipantResultRepository participantResultRepository;
     private final TournamentRegistrationRepository registrationRepository;
     private final StageQualificationRepository qualificationRepository;
+    private final PenaltyRepository penaltyRepository;
     private final TournamentAccessService tournamentAccessService;
 
     @Transactional(readOnly = true)
@@ -83,6 +87,24 @@ public class LeaderboardService {
                 standing.wins++;
             }
         }
+        penaltyRepository.findAllByTournamentIdAndStatus(
+                requireStage(stageId).getTournament().getId(),
+                PenaltyStatus.ACTIVE
+        ).forEach(penalty -> {
+            Standing standing = standings.get(penalty.getRegistration().getId());
+            if (standing == null) {
+                return;
+            }
+            if (penalty.getType() == PenaltyType.POINT_DEDUCTION) {
+                standing.penaltyPoints = standing.penaltyPoints.add(
+                        penalty.getPointsDeducted()
+                );
+                standing.points = standing.points.subtract(penalty.getPointsDeducted());
+            }
+            if (penalty.getType() == PenaltyType.DISQUALIFICATION) {
+                standing.disqualified = true;
+            }
+        });
         Set<UUID> qualified = qualificationRepository
                 .findAllByFromStageIdOrderBySourceRankAsc(stageId)
                 .stream()
@@ -90,8 +112,13 @@ public class LeaderboardService {
                 .collect(java.util.stream.Collectors.toSet());
         List<Standing> ordered = standings.values().stream()
                 .sorted(Comparator
-                        .comparing((Standing standing) -> standing.points)
-                        .reversed()
+                        .comparing((Standing standing) -> standing.disqualified)
+                        .thenComparing(
+                                Comparator.comparing(
+                                                (Standing standing) -> standing.points
+                                        )
+                                        .reversed()
+                        )
                         .thenComparing(
                                 Comparator.comparingInt((Standing standing) -> standing.wins)
                                         .reversed()
@@ -111,6 +138,8 @@ public class LeaderboardService {
                     standing.wins,
                     standing.placementTotal,
                     standing.points,
+                    standing.penaltyPoints,
+                    standing.disqualified,
                     qualified.contains(standing.registration.getId())
             ));
         }
@@ -137,7 +166,8 @@ public class LeaderboardService {
                 throw new BadRequestException("This stage does not contain groups");
             }
             for (StageGroup group : groups) {
-                List<LeaderboardEntryResponse> entries = leaderboard(stageId, group.getId());
+                List<LeaderboardEntryResponse> entries = leaderboard(stageId, group.getId())
+                        .stream().filter(entry -> !entry.disqualified()).toList();
                 int count = Math.min(request.qualifierCount(), entries.size());
                 for (int index = 0; index < count; index++) {
                     qualifications.add(createQualification(
@@ -151,7 +181,8 @@ public class LeaderboardService {
                 }
             }
         } else {
-            List<LeaderboardEntryResponse> entries = leaderboard(stageId, null);
+            List<LeaderboardEntryResponse> entries = leaderboard(stageId, null)
+                    .stream().filter(entry -> !entry.disqualified()).toList();
             int count = Math.min(request.qualifierCount(), entries.size());
             for (int index = 0; index < count; index++) {
                 qualifications.add(createQualification(
@@ -257,6 +288,8 @@ public class LeaderboardService {
         private int wins;
         private int placementTotal;
         private BigDecimal points = BigDecimal.ZERO;
+        private BigDecimal penaltyPoints = BigDecimal.ZERO;
+        private boolean disqualified;
 
         private Standing(TournamentRegistration registration) {
             this.registration = registration;

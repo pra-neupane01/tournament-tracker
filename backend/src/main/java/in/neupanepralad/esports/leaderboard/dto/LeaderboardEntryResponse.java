@@ -12,6 +12,8 @@ public record LeaderboardEntryResponse(
         int wins,
         int placementTotal,
         BigDecimal points,
+        BigDecimal penaltyPoints,
+        boolean disqualified,
         boolean qualified
 ) {
 }
