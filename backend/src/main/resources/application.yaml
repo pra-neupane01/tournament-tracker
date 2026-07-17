@@ -8,9 +8,9 @@ spring:
     name: esports-management-system
 
   datasource:
-    url: ${ESPORTS_DB_URL:jdbc:postgresql://localhost:5432/esports_management_app}
-    username: ${ESPORTS_DB_USERNAME:postgres}
-    password: ${ESPORTS_DB_PASSWORD:postgres}
+    url: ${DB_URL:${ESPORTS_DB_URL:jdbc:postgresql://localhost:5432/esports_management_app}}
+    username: ${DB_USERNAME:${ESPORTS_DB_USERNAME:postgres}}
+    password: ${DB_PASSWORD:${ESPORTS_DB_PASSWORD:postgres}}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -66,7 +66,9 @@ app:
       access-token-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:3600000}
       refresh-token-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
   auth:
-    email-verification-required: ${EMAIL_VERIFICATION_REQUIRED:true}
+    # Enable this explicitly when SMTP is configured. Local development must
+    # not fail registration because no mail server is running.
+    email-verification-required: ${EMAIL_VERIFICATION_REQUIRED:false}
     verification-url: ${EMAIL_VERIFICATION_URL:http://localhost:5173/verify-email}
     verification-token-expiration-hours: ${EMAIL_VERIFICATION_TOKEN_EXPIRATION_HOURS:24}
 

@@ -49,9 +49,9 @@ Flyway applies versioned migrations on startup. Existing development databases c
 `FLYWAY_ENABLED=true` and `spring.jpa.hibernate.ddl-auto=update`; production deployments should use
 `ddl-auto=validate` after applying migrations.
 
-The mail health check is disabled by default for local development because no SMTP server is assumed
-to be running on `localhost:25`. Configure `MAIL_HOST`, `MAIL_PORT`, credentials, and set
-`MAIL_HEALTH_ENABLED=true` when using a real SMTP provider.
+Email verification is disabled by default for local development, so registration does not require a
+local SMTP server. Configure `MAIL_HOST`, `MAIL_PORT`, credentials, set
+`EMAIL_VERIFICATION_REQUIRED=true`, and set `MAIL_HEALTH_ENABLED=true` when using a real SMTP provider.
 
 ### 2. Backend Setup
 The backend uses standard environment variables that fall back to sensible defaults. You can override them via the `.env` file.
