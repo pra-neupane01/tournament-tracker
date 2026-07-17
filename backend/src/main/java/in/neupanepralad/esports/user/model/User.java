@@ -32,5 +32,8 @@ public class User extends BaseEntity {
     private boolean enabled = true;
 
     @Column(nullable = false)
+    private boolean emailVerified;
+
+    @Column(nullable = false)
     private boolean locked;
 }

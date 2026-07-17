@@ -7,7 +7,7 @@ A comprehensive, production-ready platform designed to help colleges, schools, a
 **Backend:**
 - Java 21 / Spring Boot 4.1.0
 - Spring Web, Spring Data JPA, Spring Security
-- PostgreSQL with Hibernate-managed local schema updates
+- PostgreSQL with Flyway migrations and Hibernate-managed compatibility updates for existing local databases
 - Spring WebSocket
 - Swagger / Springdoc OpenAPI
 
@@ -45,8 +45,9 @@ Create a local database named `esports_management_app`.
 psql -U postgres -c "CREATE DATABASE esports_management_app;"
 ```
 
-Hibernate creates and updates application tables automatically during this development phase.
-Database migrations are intentionally not enabled.
+Flyway applies versioned migrations on startup. Existing development databases can be adopted with
+`FLYWAY_ENABLED=true` and `spring.jpa.hibernate.ddl-auto=update`; production deployments should use
+`ddl-auto=validate` after applying migrations.
 
 ### 2. Backend Setup
 The backend uses standard environment variables that fall back to sensible defaults. You can override them via the `.env` file.
@@ -101,6 +102,7 @@ Once both servers are running, access the application and APIs via:
 ## Implemented Scope
 
 - JWT authentication, rotating refresh tokens, role authorization, and account administration.
+- Email verification with expiring hashed tokens, resend support, and JavaMailSender delivery.
 - Organizations, educational institutions, memberships, games, teams, and roster management.
 - Tournament CRUD, lifecycle rules, dynamic registration forms, application review, and roster snapshots.
 - Stages, groups, fixture generation, scheduling, protected rooms, and participant check-in.

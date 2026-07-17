@@ -40,7 +40,8 @@ export function RegisterPage() {
     setSubmitError('');
     try {
       await registerAccount(input);
-      navigate('/dashboard', { replace: true });
+      if (useAuthStore.getState().isAuthenticated) navigate('/dashboard', { replace: true });
+      else navigate(`/verify-email?email=${encodeURIComponent(input.email)}`, { replace: true });
     } catch (error) {
       setSubmitError(getErrorMessage(error, 'Could not create your account'));
     }

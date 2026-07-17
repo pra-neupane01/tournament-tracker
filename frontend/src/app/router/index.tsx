@@ -25,6 +25,10 @@ export const router = createBrowserRouter([
     lazy: lazyRoute(() => import('../../pages/RegisterPage'), 'RegisterPage'),
   },
   {
+    path: '/verify-email',
+    lazy: lazyRoute(() => import('../../pages/VerifyEmailPage'), 'VerifyEmailPage'),
+  },
+  {
     path: '/verify-certificate',
     lazy: lazyRoute(
       () => import('../../pages/VerifyCertificatePage'),

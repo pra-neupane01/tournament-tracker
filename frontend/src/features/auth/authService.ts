@@ -6,6 +6,7 @@ import type {
   ChangePasswordInput,
   LoginInput,
   RegisterInput,
+  RegistrationResponse,
 } from './types';
 
 export const authService = {
@@ -14,8 +15,11 @@ export const authService = {
     return response.data.data;
   },
   register: async (input: RegisterInput) => {
-    const response = await apiClient.post<APIResponse<AuthResponse>>('/auth/register', input);
+    const response = await apiClient.post<APIResponse<AuthResponse | RegistrationResponse>>('/auth/register', input);
     return response.data.data;
+  },
+  verifyEmail: async (token: string) => {
+    await apiClient.post<APIResponse<null>>('/auth/verify-email', { token });
   },
   currentUser: async () => {
     const response = await apiClient.get<APIResponse<AuthUser>>('/auth/me');

@@ -32,7 +32,9 @@ export const useAuthStore = create<AuthState>()(
       },
       register: async (input) => {
         const response = await authService.register(input);
-        set({ user: acceptSession(response), isAuthenticated: true });
+        if ('accessToken' in response) {
+          set({ user: acceptSession(response), isAuthenticated: true });
+        }
       },
       restoreSession: async () => {
         if (!tokenStorage.getAccessToken() && !tokenStorage.getRefreshToken()) {

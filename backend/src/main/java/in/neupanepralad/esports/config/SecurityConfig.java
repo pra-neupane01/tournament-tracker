@@ -54,7 +54,9 @@ public class SecurityConfig {
                     "/certificates/verify/**",
                     "/auth/register",
                     "/auth/login",
-                    "/auth/refresh"
+                    "/auth/refresh",
+                    "/auth/verify-email"
+                    ,"/auth/resend-verification"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

@@ -22,6 +22,11 @@ export interface AuthResponse {
   user: AuthUser;
 }
 
+export interface RegistrationResponse {
+  email: string;
+  verificationRequired: boolean;
+}
+
 export interface LoginInput {
   email: string;
   password: string;

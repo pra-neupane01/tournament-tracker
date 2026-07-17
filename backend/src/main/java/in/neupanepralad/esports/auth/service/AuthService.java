@@ -5,6 +5,7 @@ import in.neupanepralad.esports.auth.dto.ChangePasswordRequest;
 import in.neupanepralad.esports.auth.dto.LoginRequest;
 import in.neupanepralad.esports.auth.dto.RefreshRequest;
 import in.neupanepralad.esports.auth.dto.RegisterRequest;
+import in.neupanepralad.esports.auth.dto.RegistrationResponse;
 import in.neupanepralad.esports.auth.dto.UserResponse;
 import in.neupanepralad.esports.auth.model.RefreshToken;
 import in.neupanepralad.esports.auth.repository.RefreshTokenRepository;
@@ -42,12 +43,13 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailVerificationService emailVerificationService;
 
     @Value("${app.security.jwt.refresh-token-expiration-ms}")
     private long refreshTokenExpirationMs;
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
+    public Object register(RegisterRequest request) {
         String email = normalizeEmail(request.email());
         if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new ConflictException("An account with this email already exists");
@@ -58,7 +60,13 @@ public class AuthService {
         user.setEmail(email);
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(Role.PLAYER);
-        return issueTokens(userRepository.save(user));
+        user.setEmailVerified(!emailVerificationService.isVerificationRequired());
+        User savedUser = userRepository.save(user);
+        if (emailVerificationService.isVerificationRequired()) {
+            emailVerificationService.sendVerification(savedUser);
+            return new RegistrationResponse(savedUser.getEmail(), true);
+        }
+        return issueTokens(savedUser);
     }
 
     @Transactional
@@ -69,7 +77,17 @@ public class AuthService {
                 || !passwordEncoder.matches(request.password(), user.getPasswordHash())) {
             throw new UnauthorizedException("Invalid email or password");
         }
+        if (emailVerificationService.isVerificationRequired() && !user.isEmailVerified()) {
+            throw new UnauthorizedException("Verify your email before signing in");
+        }
         return issueTokens(user);
+    }
+
+    @Transactional
+    public void resendVerification(String email) {
+        userRepository.findByEmailIgnoreCase(normalizeEmail(email)).ifPresent(user -> {
+            if (!user.isEmailVerified()) emailVerificationService.sendVerification(user);
+        });
     }
 
     @Transactional

@@ -6,7 +6,10 @@ import in.neupanepralad.esports.auth.dto.LoginRequest;
 import in.neupanepralad.esports.auth.dto.RefreshRequest;
 import in.neupanepralad.esports.auth.dto.RegisterRequest;
 import in.neupanepralad.esports.auth.dto.UserResponse;
+import in.neupanepralad.esports.auth.dto.EmailTokenRequest;
+import in.neupanepralad.esports.auth.dto.EmailAddressRequest;
 import in.neupanepralad.esports.auth.service.AuthService;
+import in.neupanepralad.esports.auth.service.EmailVerificationService;
 import in.neupanepralad.esports.common.response.APIResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +30,24 @@ import java.util.UUID;
 public class AuthController {
 
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public APIResponse<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public APIResponse<?> register(@Valid @RequestBody RegisterRequest request) {
         return APIResponse.success("Account created", authService.register(request));
+    }
+
+    @PostMapping("/verify-email")
+    public APIResponse<Void> verifyEmail(@Valid @RequestBody EmailTokenRequest request) {
+        emailVerificationService.verify(request.token());
+        return APIResponse.success("Email verified. You can now sign in.");
+    }
+
+    @PostMapping("/resend-verification")
+    public APIResponse<Void> resendVerification(@Valid @RequestBody EmailAddressRequest request) {
+        authService.resendVerification(request.email());
+        return APIResponse.success("If the account exists, a verification email has been sent.");
     }
 
     @PostMapping("/login")
