@@ -45,6 +45,9 @@ spring:
       max-request-size: ${MAX_REQUEST_SIZE:10MB}
 
 management:
+  health:
+    mail:
+      enabled: ${MAIL_HEALTH_ENABLED:false}
   endpoints:
     web:
       exposure:
