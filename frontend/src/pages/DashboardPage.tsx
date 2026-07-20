@@ -17,8 +17,15 @@ import { teamService } from '../features/teams/teamService';
 import { tournamentService } from '../features/tournaments/tournamentService';
 import { formatDateTime } from '../utils/date';
 
+import { PlayerHomePage } from './PlayerHomePage';
+
 export function DashboardPage() {
   const user = useAuthStore((state) => state.user);
+
+  if (user?.role === 'PLAYER') {
+    return <PlayerHomePage />;
+  }
+
   const tournaments = useQuery({
     queryKey: ['tournaments', 'dashboard'],
     queryFn: () => tournamentService.list(),
