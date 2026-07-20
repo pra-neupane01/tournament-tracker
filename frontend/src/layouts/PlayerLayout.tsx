@@ -1,0 +1,41 @@
+import type { FC } from 'react';
+import { useState, useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+import { PlayerHeader } from '../components/layout/PlayerHeader';
+import { PlayerFooter } from '../components/layout/PlayerFooter';
+import { Sidebar } from '../components/layout/Sidebar';
+
+export const PlayerLayout: FC = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Scroll to top on route change
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  return (
+    <div className="min-h-screen bg-[var(--color-background)] flex flex-col">
+      <PlayerHeader onMenuClick={() => setMobileOpen((value) => !value)} />
+      
+      {/* Mobile Sidebar overlay for Player nav if needed */}
+      {mobileOpen && (
+        <>
+          <button
+            className="sidebar-backdrop md:hidden"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation"
+          />
+          {/* We reuse the sidebar but only show it on mobile for players */}
+          <Sidebar mobileOpen={mobileOpen} onNavigate={() => setMobileOpen(false)} />
+        </>
+      )}
+
+      <main className="flex-1 flex flex-col w-full">
+        <Outlet />
+      </main>
+
+      <PlayerFooter />
+    </div>
+  );
+};
