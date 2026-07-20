@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '../../features/auth/ProtectedRoute';
-import { DashboardLayout } from '../../layouts/DashboardLayout';
+import { RoleBasedLayout } from '../../layouts/RoleBasedLayout';
 
 const lazyRoute = (
   loader: () => Promise<Record<string, unknown>>,
@@ -29,25 +29,11 @@ export const router = createBrowserRouter([
     lazy: lazyRoute(() => import('../../pages/VerifyEmailPage'), 'VerifyEmailPage'),
   },
   {
-    path: '/verify-certificate',
-    lazy: lazyRoute(
-      () => import('../../pages/VerifyCertificatePage'),
-      'VerifyCertificatePage',
-    ),
-  },
-  {
-    path: '/verify-certificate/:verificationCode',
-    lazy: lazyRoute(
-      () => import('../../pages/VerifyCertificatePage'),
-      'VerifyCertificatePage',
-    ),
-  },
-  {
     path: '/',
     element: <ProtectedRoute />,
     children: [
       {
-        element: <DashboardLayout />,
+        element: <RoleBasedLayout />,
         children: [
           {
             path: 'dashboard',
@@ -81,13 +67,6 @@ export const router = createBrowserRouter([
             lazy: lazyRoute(
               () => import('../../pages/NotificationsPage'),
               'NotificationsPage',
-            ),
-          },
-          {
-            path: 'certificates',
-            lazy: lazyRoute(
-              () => import('../../pages/CertificatesPage'),
-              'CertificatesPage',
             ),
           },
           {
@@ -141,13 +120,6 @@ export const router = createBrowserRouter([
             lazy: lazyRoute(
               () => import('../../pages/TournamentGovernancePage'),
               'TournamentGovernancePage',
-            ),
-          },
-          {
-            path: 'tournaments/:tournamentId/assets',
-            lazy: lazyRoute(
-              () => import('../../pages/TournamentAssetsPage'),
-              'TournamentAssetsPage',
             ),
           },
         ],
