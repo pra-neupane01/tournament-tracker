@@ -40,6 +40,10 @@ export const router = createBrowserRouter([
             lazy: lazyRoute(() => import('../../pages/DashboardPage'), 'DashboardPage'),
           },
           {
+            path: 'games/free-fire',
+            lazy: lazyRoute(() => import('../../pages/FreeFirePage'), 'FreeFirePage'),
+          },
+          {
             path: 'games/:gameId',
             lazy: lazyRoute(() => import('../../pages/PlayerGamePage'), 'PlayerGamePage'),
           },

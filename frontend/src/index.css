@@ -1614,5 +1614,51 @@
   .player-tournament-card-body {
     @apply p-5 flex flex-col gap-3;
   }
+
+  /* ═══════════════════════════════════════════════════════════════
+     Free Fire — Card & Button System
+     ═══════════════════════════════════════════════════════════════ */
+
+  .ff-card {
+    @apply flex flex-col overflow-hidden rounded-xl
+           border border-slate-700/40 bg-[#0d1220]
+           transition-all duration-300
+           hover:border-cyan-500/25 hover:shadow-xl hover:shadow-cyan-500/[0.06]
+           hover:-translate-y-1;
+  }
+
+  .ff-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           px-5 py-2.5 text-sm font-bold tracking-wide
+           transition-all duration-300 cursor-pointer;
+  }
+
+  .ff-btn--primary {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-600 text-white
+           shadow-md shadow-cyan-500/20
+           hover:shadow-lg hover:shadow-cyan-500/30 hover:brightness-110
+           active:scale-[0.97];
+  }
+
+  .ff-btn--secondary {
+    @apply bg-slate-700/40 text-slate-200 border border-slate-600/40
+           hover:bg-slate-700/60 hover:text-white
+           active:scale-[0.97];
+  }
+
+  .ff-btn--ghost {
+    @apply bg-transparent text-slate-400 border border-slate-700/40
+           hover:text-white hover:border-slate-600/50 hover:bg-white/[0.03]
+           active:scale-[0.97];
+  }
+
+  /* Modal animate-in */
+  .animate-in {
+    animation: ff-slide-in 250ms ease-out;
+  }
+  @keyframes ff-slide-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
 }
 
