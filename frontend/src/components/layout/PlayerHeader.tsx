@@ -1,24 +1,33 @@
-import { LogOut, Menu, User } from 'lucide-react';
+import { LogOut, Menu, User, X } from 'lucide-react';
+import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
 import { NotificationCenter } from '../notifications/NotificationCenter';
 
-export function PlayerHeader({ onMenuClick }: { onMenuClick?: () => void }) {
+export function PlayerHeader() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const signOut = async () => {
     await logout();
     navigate('/login', { replace: true });
   };
 
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/games', label: 'Games' },
+    { to: '/teams', label: 'My Teams' },
+    { to: '/tournaments', label: 'My Tournaments' },
+  ];
+
   return (
     <header className="player-navbar">
       <div className="flex items-center gap-6">
         <button
           className="icon-button md:hidden"
-          onClick={onMenuClick}
+          onClick={() => setMobileMenuOpen(true)}
           aria-label="Open navigation"
         >
           <Menu className="h-5 w-5 text-white" />
@@ -28,18 +37,16 @@ export function PlayerHeader({ onMenuClick }: { onMenuClick?: () => void }) {
         </Link>
 
         <nav className="player-nav-links">
-          <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
-            Home
-          </NavLink>
-          <NavLink to="/games" className={({ isActive }) => (isActive ? 'active' : '')}>
-            Games
-          </NavLink>
-          <NavLink to="/teams" className={({ isActive }) => (isActive ? 'active' : '')}>
-            My Teams
-          </NavLink>
-          <NavLink to="/tournaments" className={({ isActive }) => (isActive ? 'active' : '')}>
-            My Tournaments
-          </NavLink>
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.to === '/'}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+            >
+              {link.label}
+            </NavLink>
+          ))}
         </nav>
       </div>
 
@@ -62,6 +69,43 @@ export function PlayerHeader({ onMenuClick }: { onMenuClick?: () => void }) {
           </button>
         </div>
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-[var(--color-background)]/95 backdrop-blur-md md:hidden">
+          <div className="flex h-16 items-center justify-between border-b border-white/5 px-6">
+            <Link 
+              to="/" 
+              className="font-bold text-xl text-white tracking-tight flex items-center gap-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span className="text-[var(--color-primary)]">Esports</span>Manager
+            </Link>
+            <button
+              className="icon-button text-white"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close navigation"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <nav className="flex flex-col p-6 space-y-4">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                end={link.to === '/'}
+                className={({ isActive }) => 
+                  `block text-lg font-medium transition-colors ${isActive ? 'text-[var(--color-primary)]' : 'text-white/70 hover:text-white'}`
+                }
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
