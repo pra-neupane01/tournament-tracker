@@ -6,9 +6,14 @@ import {
   Plus,
   Search,
   Trash2,
+  Trophy,
   UserPlus,
   Users,
 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { gameService } from '../features/games/gameService';
+import { tournamentService } from '../features/tournaments/tournamentService';
+import type { TournamentFormat, TournamentInput } from '../features/tournaments/types';
 import { useState, type FormEvent } from 'react';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
@@ -291,6 +296,16 @@ export function OrganizationsPage() {
                 </div>
               ))}
             </div>
+
+            <div className="section-heading detail-actions" style={{ marginTop: '2rem' }}>
+              <Trophy />
+              <div>
+                <h2>{selected.name} Tournaments</h2>
+                <p>Manage tournaments for this organization.</p>
+              </div>
+            </div>
+            
+            <OrganizationTournaments organizationId={selected.id} />
           </aside>
         )}
       </div>
@@ -376,3 +391,386 @@ export function OrganizationsPage() {
     </PageContainer>
   );
 }
+
+const emptyTournament: TournamentInput = {
+  organizationId: '',
+  gameId: '',
+  name: '',
+  slug: '',
+  description: '',
+  format: 'SINGLE_ELIMINATION',
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  registrationOpensAt: null,
+  registrationClosesAt: null,
+  startsAt: '',
+  endsAt: null,
+  minimumTeams: 2,
+  maximumTeams: 32,
+  minimumRosterSize: 1,
+  maximumRosterSize: 5,
+  allowSubstitutes: true,
+  publicVisible: true,
+};
+
+const formatOptions: TournamentFormat[] = [
+  'SINGLE_ELIMINATION',
+  'DOUBLE_ELIMINATION',
+  'ROUND_ROBIN',
+  'SWISS',
+  'BATTLE_ROYALE',
+  'CUSTOM',
+];
+
+function OrganizationTournaments({ organizationId }: { organizationId: string }) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [tournament, setTournament] = useState({ ...emptyTournament, organizationId });
+  const [notice, setNotice] = useState('');
+  const [teamType, setTeamType] = useState<'Solo' | 'Duo' | 'Squad'>('Squad');
+
+  const games = useQuery({ queryKey: ['games'], queryFn: () => gameService.list() });
+  const tournaments = useQuery({
+    queryKey: ['tournaments', { organizationId }],
+    queryFn: () => tournamentService.list({}),
+  });
+  
+  const orgTournaments = tournaments.data?.content.filter(t => t.organizationId === organizationId) || [];
+
+  const createTournament = useMutation({
+    mutationFn: tournamentService.create,
+    onSuccess: async (created) => {
+      setOpen(false);
+      setTournament({ ...emptyTournament, organizationId });
+      await queryClient.invalidateQueries({ queryKey: ['tournaments'] });
+      navigate(`/tournaments/${created.id}`);
+    },
+    onError: (error) => setNotice(getErrorMessage(error)),
+  });
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setNotice('');
+    
+    // Front-end date validation
+    if (tournament.registrationClosesAt && tournament.startsAt && new Date(tournament.registrationClosesAt) > new Date(tournament.startsAt)) {
+      setNotice('Registration close must be before the tournament starts.');
+      return;
+    }
+    if (tournament.registrationOpensAt && tournament.registrationClosesAt && new Date(tournament.registrationClosesAt) < new Date(tournament.registrationOpensAt)) {
+      setNotice('Registration close must be after registration open.');
+      return;
+    }
+
+    let minRoster = tournament.minimumRosterSize;
+    let maxRoster = tournament.maximumRosterSize;
+    
+    const selectedGame = games.data?.content.find(g => g.id === tournament.gameId);
+    const isFreeFire = selectedGame?.name.toLowerCase().includes('freefire') || selectedGame?.name.toLowerCase().includes('free fire');
+    
+    if (isFreeFire) {
+      if (teamType === 'Solo') {
+        minRoster = 1; maxRoster = 1;
+      } else if (teamType === 'Duo') {
+        minRoster = 2; maxRoster = 2;
+      } else {
+        minRoster = 4; maxRoster = 5;
+      }
+    }
+
+    createTournament.mutate({
+        ...tournament,
+        organizationId,
+        minimumRosterSize: minRoster,
+        maximumRosterSize: maxRoster,
+    });
+  };
+
+  return (
+    <>
+      <button className="button button-primary" onClick={() => setOpen(true)} style={{ marginBottom: '1rem' }}>
+        <Plus /> Create tournament
+      </button>
+
+      {tournaments.isLoading && <LoadingState message="Loading tournaments..." />}
+      {orgTournaments.length === 0 && !tournaments.isLoading && <p className="text-sm text-[var(--color-text-muted)]">No tournaments found for this organization.</p>}
+      
+      <div className="tournament-grid">
+        {orgTournaments.map((item) => (
+          <Link to={`/tournaments/${item.id}`} className="tournament-card" key={item.id} style={{ display: 'block', padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '0.5rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Trophy size={16} />
+                <strong>{item.name}</strong>
+              </div>
+              <span className="badge">{item.status.replaceAll('_', ' ')}</span>
+            </div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+              {item.gameName} · {item.format.replaceAll('_', ' ')}
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <Modal open={open} title="Create tournament" onClose={() => setOpen(false)}>
+        <form className="form-stack" onSubmit={submit}>
+          {notice && <div className="alert alert-error">{notice}</div>}
+          <div className="field">
+            <span>Select Game</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+              {games.data?.content.map((game) => {
+                const isSelected = tournament.gameId === game.id;
+                return (
+                  <div 
+                    key={game.id} 
+                    onClick={() => {
+                        const isFreeFire = game.name.toLowerCase().includes('freefire') || game.name.toLowerCase().includes('free fire');
+                        setTournament({ ...tournament, gameId: game.id, format: isFreeFire ? 'BATTLE_ROYALE' : 'SINGLE_ELIMINATION' });
+                        if (isFreeFire) setTeamType('Squad');
+                    }}
+                    style={{ 
+                        padding: '1rem', 
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid #334155', 
+                        borderRadius: '0.5rem', 
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                        transition: 'all 0.2s'
+                    }}
+                  >
+                    <div style={{ fontWeight: 500 }}>{game.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="form-grid">
+            <label className="field">
+              <span>Name</span>
+              <input
+                value={tournament.name}
+                onChange={(event) =>
+                  setTournament({
+                    ...tournament,
+                    name: event.target.value,
+                    slug: event.target.value
+                      .toLowerCase()
+                      .trim()
+                      .replace(/[^a-z0-9]+/g, '-')
+                      .replace(/^-|-$/g, ''),
+                  })
+                }
+                required
+              />
+            </label>
+            <label className="field">
+              <span>Slug</span>
+              <input
+                value={tournament.slug}
+                onChange={(event) => setTournament({ ...tournament, slug: event.target.value })}
+                pattern="^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                required
+              />
+            </label>
+          </div>
+          {(() => {
+              const selectedGame = games.data?.content.find(g => g.id === tournament.gameId);
+              const isFreeFire = selectedGame?.name.toLowerCase().includes('freefire') || selectedGame?.name.toLowerCase().includes('free fire');
+              
+              if (isFreeFire) {
+                  return (
+                      <div className="form-grid">
+                        <label className="field">
+                          <span>Format</span>
+                          <select
+                            value={tournament.format}
+                            onChange={(event) => {
+                                const newFormat = event.target.value as TournamentFormat;
+                                setTournament({
+                                    ...tournament,
+                                    format: newFormat,
+                                });
+                                if (newFormat === 'CUSTOM') {
+                                    setTeamType('Squad');
+                                }
+                            }}
+                            required
+                          >
+                            <option value="BATTLE_ROYALE">Battle Royale</option>
+                            <option value="CUSTOM">Clash Squad</option>
+                          </select>
+                        </label>
+                        <label className="field">
+                          <span>Team Type</span>
+                          <select
+                            value={teamType}
+                            onChange={(event) => setTeamType(event.target.value as any)}
+                            required
+                          >
+                            {tournament.format === 'BATTLE_ROYALE' ? (
+                                <>
+                                    <option value="Solo">Solo</option>
+                                    <option value="Duo">Duo</option>
+                                    <option value="Squad">Squad</option>
+                                </>
+                            ) : (
+                                <option value="Squad">Squad</option>
+                            )}
+                          </select>
+                        </label>
+                      </div>
+                  );
+              } else {
+                  return (
+                      <label className="field">
+                        <span>Format</span>
+                        <select
+                          value={tournament.format}
+                          onChange={(event) =>
+                            setTournament({
+                              ...tournament,
+                              format: event.target.value as TournamentFormat,
+                            })
+                          }
+                          required
+                        >
+                          {formatOptions.map((format) => (
+                            <option key={format} value={format}>
+                              {format.replaceAll('_', ' ')}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                  );
+              }
+          })()}
+          <label className="field">
+            <span>Description</span>
+            <textarea
+              rows={3}
+              value={tournament.description}
+              onChange={(event) =>
+                setTournament({ ...tournament, description: event.target.value })
+              }
+            />
+          </label>
+          <div className="form-grid">
+            <DateField
+              label="Registration opens"
+              value={tournament.registrationOpensAt}
+              onChange={(value) => setTournament({ ...tournament, registrationOpensAt: value })}
+            />
+            <DateField
+              label="Registration closes"
+              value={tournament.registrationClosesAt}
+              onChange={(value) => setTournament({ ...tournament, registrationClosesAt: value })}
+            />
+            <DateField
+              label="Tournament starts"
+              value={tournament.startsAt}
+              required
+              onChange={(value) => setTournament({ ...tournament, startsAt: value ?? '' })}
+            />
+            <DateField
+              label="Tournament ends"
+              value={tournament.endsAt}
+              onChange={(value) => setTournament({ ...tournament, endsAt: value })}
+            />
+          </div>
+          <div className="form-grid">
+            <NumberField
+              label="Minimum teams"
+              value={tournament.minimumTeams}
+              onChange={(value) => setTournament({ ...tournament, minimumTeams: value })}
+            />
+            <NumberField
+              label="Maximum teams"
+              value={tournament.maximumTeams}
+              onChange={(value) => setTournament({ ...tournament, maximumTeams: value })}
+            />
+          </div>
+          <label className="field">
+            <span>Time zone</span>
+            <input
+              value={tournament.timeZone}
+              onChange={(event) => setTournament({ ...tournament, timeZone: event.target.value })}
+              required
+            />
+          </label>
+          <div className="check-row">
+            <label>
+              <input
+                type="checkbox"
+                checked={tournament.allowSubstitutes}
+                onChange={(event) =>
+                  setTournament({ ...tournament, allowSubstitutes: event.target.checked })
+                }
+              />
+              Allow substitutes
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={tournament.publicVisible}
+                onChange={(event) =>
+                  setTournament({ ...tournament, publicVisible: event.target.checked })
+                }
+              />
+              Publicly visible
+            </label>
+          </div>
+          <button className="button button-primary" disabled={createTournament.isPending}>
+            {createTournament.isPending ? 'Creating...' : 'Create tournament'}
+          </button>
+        </form>
+      </Modal>
+    </>
+  );
+}
+
+function DateField({
+  label,
+  value,
+  required,
+  onChange,
+}: {
+  label: string;
+  value: string | null;
+  required?: boolean;
+  onChange: (value: string | null) => void;
+}) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <input
+        type="datetime-local"
+        value={value ?? ''}
+        required={required}
+        onChange={(event) => onChange(event.target.value || null)}
+      />
+    </label>
+  );
+}
+
+function NumberField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <input
+        type="number"
+        min={1}
+        value={value}
+        onChange={(event) => onChange(Number(event.target.value))}
+      />
+    </label>
+  );
+}
+

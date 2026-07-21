@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Search } from 'lucide-react';
 import { useState } from 'react';
-import { gameService } from '../../features/games/gameService';
-import { tournamentService } from '../../features/tournaments/tournamentService';
-import { PlayerTournamentCard } from '../../components/player/PlayerTournamentCard';
-import { LoadingState } from '../../components/common/LoadingState';
-import { ErrorState } from '../../components/common/ErrorState';
-import { EmptyState } from '../../components/common/EmptyState';
+import { gameService } from '../features/games/gameService';
+import { tournamentService } from '../features/tournaments/tournamentService';
+import { PlayerTournamentCard } from '../components/player/PlayerTournamentCard';
+import { LoadingState } from '../components/common/LoadingState';
+import { ErrorState } from '../components/common/ErrorState';
+import { EmptyState } from '../components/common/EmptyState';
 
 // Fallback images matching the home page
 const gameImages: Record<string, string> = {

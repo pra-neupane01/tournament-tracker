@@ -1411,7 +1411,7 @@
   }
 
   .player-game-card {
-    @apply relative group overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-surface)] aspect-[3/4] transition-all duration-300 hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:shadow-2xl hover:shadow-[var(--color-primary)]/20 cursor-pointer;
+    @apply relative overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-surface)] aspect-[3/4] transition-all duration-300 hover:-translate-y-2 hover:border-[var(--color-primary)]/50 hover:shadow-2xl hover:shadow-[var(--color-primary)]/20 cursor-pointer;
   }
 
   .player-game-card img {

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ClipboardCheck, Send, ShieldCheck, Users } from 'lucide-react';
+import { ClipboardCheck, Plus, Send, ShieldCheck, Users } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
@@ -113,6 +113,22 @@ export function TournamentRegistrationsPage() {
     submitRegistration.mutate();
   };
 
+  const directAddMutation = useMutation({
+    mutationFn: () => registrationService.directAdd(tournamentId, { teamId }),
+    onSuccess: async (result) => {
+      setSubmitted(result);
+      setNotice('Team directly added successfully.');
+      await refresh();
+    },
+    onError: (error) => setNotice(getErrorMessage(error)),
+  });
+
+  const directAdd = (event: FormEvent) => {
+    event.preventDefault();
+    setNotice('');
+    directAddMutation.mutate();
+  };
+
   return (
     <div className="tournament-page">
       <TournamentHeader tournament={tournament.data} />
@@ -192,6 +208,35 @@ export function TournamentRegistrationsPage() {
                 disabled={submitRegistration.isPending || !teamId || rosterIds.length === 0}
               >
                 <Send /> {submitRegistration.isPending ? 'Submitting...' : 'Submit registration'}
+              </button>
+            </form>
+          </section>
+
+          <section className="panel">
+            <div className="section-heading">
+              <Users />
+              <div>
+                <h2>Directly add a team</h2>
+                <p>Add an existing registered team directly to the tournament.</p>
+              </div>
+            </div>
+            <form className="form-stack" onSubmit={directAdd}>
+              <label className="field">
+                <span>Select a team</span>
+                <select value={teamId} onChange={(event) => setTeamId(event.target.value)} required>
+                  <option value="">Select a team</option>
+                  {teams.data?.content.map((team) => (
+                    <option key={team.id} value={team.id}>
+                      {team.name} · {team.gameName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                className="button button-primary"
+                disabled={directAddMutation.isPending || !teamId}
+              >
+                <Plus /> {directAddMutation.isPending ? 'Adding...' : 'Directly add team'}
               </button>
             </form>
           </section>

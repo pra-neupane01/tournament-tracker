@@ -1,9 +1,9 @@
 import { Calendar, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { formatDateTime } from '../../utils/date';
-import type { TournamentResponse } from '../../features/tournaments/types';
+import type { Tournament } from '../../features/tournaments/types';
 
-export function PlayerTournamentCard({ tournament }: { tournament: TournamentResponse }) {
+export function PlayerTournamentCard({ tournament }: { tournament: Tournament }) {
   return (
     <article className="player-tournament-card">
       <div className="player-tournament-card-header">
@@ -18,11 +18,11 @@ export function PlayerTournamentCard({ tournament }: { tournament: TournamentRes
       <div className="player-tournament-card-body">
         <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
           <Calendar className="h-4 w-4" />
-          <span>{formatDateTime(tournament.startDate)}</span>
+          <span>{formatDateTime(tournament.startsAt)}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
           <Users className="h-4 w-4" />
-          <span>{tournament.participantCount} / {tournament.maxTeams} Teams</span>
+          <span>? / {tournament.maximumTeams} Teams</span>
         </div>
         
         <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">

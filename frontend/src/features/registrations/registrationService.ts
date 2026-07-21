@@ -14,6 +14,17 @@ export const registrationService = {
     );
     return response.data.data;
   },
+
+  directAdd: async (
+    tournamentId: string,
+    data: { teamId: string }
+  ): Promise<TournamentRegistration> => {
+    const response = await apiClient.post<APIResponse<TournamentRegistration>>(
+      `/tournaments/${tournamentId}/direct-registrations`,
+      data
+    );
+    return response.data.data;
+  },
   submit: async (tournamentId: string, input: RegistrationSubmitInput) => {
     const response = await apiClient.post<APIResponse<TournamentRegistration>>(
       `/tournaments/${tournamentId}/registrations`,

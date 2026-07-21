@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 const games = [
   { id: 'free-fire', name: 'Free Fire', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800' },
@@ -30,7 +31,7 @@ export function PlayerHomePage() {
           {games.map((game) => (
             <div 
               key={game.id} 
-              className="player-game-card"
+              className="player-game-card group"
               onClick={() => navigate(`/games/${game.id}`)}
             >
               <img src={game.image} alt={game.name} loading="lazy" />

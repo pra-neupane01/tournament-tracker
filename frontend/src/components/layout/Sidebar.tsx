@@ -5,7 +5,6 @@ import {
   Calendar,
   Gamepad2,
   LayoutDashboard,
-  Medal,
   Settings,
   Shield,
   Trophy,
@@ -20,7 +19,6 @@ const navItems = [
   { name: 'Tournaments', path: '/tournaments', icon: Trophy },
   { name: 'Teams', path: '/teams', icon: Users },
   { name: 'Matches', path: '/matches', icon: Calendar },
-  { name: 'Certificates', path: '/certificates', icon: Medal },
   { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
