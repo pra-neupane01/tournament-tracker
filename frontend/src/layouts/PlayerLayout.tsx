@@ -14,7 +14,7 @@ export const PlayerLayout: FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] flex flex-col">
+    <div className="min-h-screen bg-[#0B0F19] flex flex-col">
       <PlayerHeader />
       
 

@@ -1360,42 +1360,199 @@
     @apply fixed inset-0 top-16 z-30 bg-slate-950/70;
   }
 
-  /* Player Redesign Specific Classes */
-  .player-navbar {
-    @apply sticky top-0 z-50 flex h-16 items-center justify-between border-b border-white/5 bg-[var(--color-background)]/80 px-6 backdrop-blur-md;
+  /* ═══════════════════════════════════════════════════════════════
+     ArenaHub — Premium eSports Navbar
+     ═══════════════════════════════════════════════════════════════ */
+
+  .arena-navbar {
+    @apply sticky top-0 z-50 h-16 border-b border-white/[0.06]
+           bg-[#0B0F19]/70 backdrop-blur-sm
+           transition-all duration-300;
   }
 
-  .player-nav-links {
-    @apply hidden md:flex items-center gap-6;
+  .arena-navbar--scrolled {
+    @apply bg-[#0B0F19]/90 backdrop-blur-xl shadow-[0_2px_24px_rgba(0,0,0,.55)]
+           border-white/[0.08];
   }
 
-  .player-nav-links a {
-    @apply text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:text-white;
+  .arena-navbar__inner {
+    @apply mx-auto flex h-full max-w-7xl items-center justify-between px-5 lg:px-8;
   }
 
-  .player-nav-links a.active {
-    @apply text-[var(--color-primary)];
+  /* Brand */
+  .arena-brand {
+    @apply flex items-baseline gap-0.5 select-none;
+  }
+  .arena-brand__arena {
+    @apply text-xl font-extrabold tracking-tight text-white
+           transition-all duration-300 group-hover:drop-shadow-[0_0_6px_rgba(255,255,255,.25)];
+  }
+  .arena-brand__hub {
+    @apply text-xl font-extrabold tracking-tight text-cyan-400
+           drop-shadow-[0_0_6px_rgba(34,211,238,.4)]
+           transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(34,211,238,.6)];
   }
 
-  .player-hero {
-    @apply relative flex min-h-[40vh] items-center justify-center overflow-hidden bg-[var(--color-background)] py-20 border-b border-[var(--color-border)];
+  /* Desktop Nav Links */
+  .arena-nav {
+    @apply hidden md:flex items-center gap-1;
   }
-
-  .player-hero::before {
+  .arena-nav__link {
+    @apply relative px-3.5 py-1.5 text-[13px] font-semibold tracking-wide text-slate-400
+           rounded-md transition-colors duration-250
+           hover:text-white hover:bg-white/[0.04];
+  }
+  .arena-nav__link--active {
+    @apply text-white;
+  }
+  .arena-nav__link--active::after {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/20 to-transparent opacity-50;
+    @apply absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-5 rounded-full
+           bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,.7)];
   }
 
-  .player-hero-content {
-    @apply relative z-10 text-center px-4;
+  /* Profile Pill */
+  .arena-profile-pill {
+    @apply flex items-center gap-2.5 rounded-full border border-white/[0.08]
+           bg-white/[0.04] py-1 pl-1 pr-3.5
+           transition-all duration-250
+           hover:border-white/[0.14] hover:bg-white/[0.07];
+  }
+  .arena-profile-pill__avatar {
+    @apply flex h-7 w-7 items-center justify-center rounded-full
+           bg-gradient-to-br from-cyan-400 to-blue-600 text-white;
+  }
+  .arena-profile-pill__name {
+    @apply text-[13px] font-semibold text-slate-200 truncate max-w-[120px];
   }
 
-  .player-hero-content h1 {
-    @apply text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4;
+  /* Logout */
+  .arena-logout-btn {
+    @apply flex items-center gap-1.5 rounded-lg px-3 py-1.5
+           text-[13px] font-semibold text-slate-400
+           border border-white/[0.06] bg-white/[0.03]
+           transition-all duration-250
+           hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/[0.06];
   }
 
-  .player-hero-content p {
-    @apply text-lg text-[var(--color-text-muted)] max-w-2xl mx-auto;
+  /* Hamburger */
+  .arena-hamburger {
+    @apply flex h-9 w-9 items-center justify-center rounded-lg
+           text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white;
+  }
+
+  /* ── Mobile Menu ── */
+  .arena-mobile-backdrop {
+    @apply fixed inset-0 z-40 bg-black/60 backdrop-blur-sm
+           opacity-0 pointer-events-none transition-opacity duration-300 md:hidden;
+  }
+  .arena-mobile-backdrop--visible {
+    @apply opacity-100 pointer-events-auto;
+  }
+
+  .arena-mobile-panel {
+    @apply fixed inset-y-0 left-0 z-50 flex w-72 flex-col
+           bg-[#0B0F19] border-r border-white/[0.06]
+           -translate-x-full transition-transform duration-300 ease-out md:hidden;
+  }
+  .arena-mobile-panel--open {
+    @apply translate-x-0;
+  }
+
+  .arena-mobile-panel__header {
+    @apply flex h-16 items-center justify-between border-b border-white/[0.06] px-5;
+  }
+
+  .arena-mobile-nav {
+    @apply flex flex-col gap-1 p-4;
+  }
+  .arena-mobile-nav__link {
+    @apply block rounded-lg px-4 py-2.5 text-[15px] font-semibold text-slate-400
+           transition-colors hover:text-white hover:bg-white/[0.04];
+  }
+  .arena-mobile-nav__link--active {
+    @apply text-white bg-cyan-400/[0.08];
+  }
+
+  .arena-mobile-panel__footer {
+    @apply mt-auto flex flex-col gap-3 border-t border-white/[0.06] p-5;
+  }
+  .arena-profile-pill--mobile {
+    @apply w-full pr-4;
+  }
+  .arena-logout-btn--mobile {
+    @apply w-full justify-center py-2.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ArenaHub — Premium Hero Section
+     ═══════════════════════════════════════════════════════════════ */
+
+  .arena-hero {
+    @apply relative flex items-center justify-center overflow-hidden
+           min-h-[48vh] py-20 md:py-28
+           bg-[#0B0F19];
+  }
+
+  /* Ambient glow orbs */
+  .arena-hero__glow {
+    @apply absolute rounded-full blur-[120px] pointer-events-none;
+  }
+  .arena-hero__glow--cyan {
+    @apply -top-24 -left-24 h-[420px] w-[420px]
+           bg-cyan-500/[0.12];
+  }
+  .arena-hero__glow--purple {
+    @apply -bottom-32 -right-16 h-[380px] w-[380px]
+           bg-purple-600/[0.10];
+  }
+
+  /* Subtle grid / mesh overlay */
+  .arena-hero__grid {
+    @apply absolute inset-0 opacity-[0.035];
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .arena-hero__content {
+    @apply relative z-10 mx-auto max-w-3xl px-5 text-center;
+  }
+
+  .arena-hero__title {
+    @apply text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-5 leading-[1.1];
+  }
+  .arena-hero__title-accent {
+    @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
+  }
+
+  .arena-hero__subtitle {
+    @apply mx-auto max-w-xl text-base sm:text-lg text-slate-400 leading-relaxed mb-10;
+  }
+
+  /* CTA Buttons */
+  .arena-hero__ctas {
+    @apply flex flex-col sm:flex-row items-center justify-center gap-4;
+  }
+
+  .arena-btn {
+    @apply flex items-center justify-center gap-2.5 rounded-xl px-7 py-3
+           text-sm font-bold tracking-wide transition-all duration-300;
+  }
+
+  .arena-btn--primary {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-600 text-white
+           shadow-lg shadow-cyan-500/25
+           hover:shadow-cyan-500/40 hover:brightness-110
+           active:scale-[0.97];
+  }
+
+  .arena-btn--outline {
+    @apply bg-transparent text-slate-200
+           border border-white/[0.12]
+           hover:border-white/[0.24] hover:bg-white/[0.04]
+           active:scale-[0.97];
   }
 
   .game-discovery-section {

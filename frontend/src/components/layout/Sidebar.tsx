@@ -61,7 +61,7 @@ export const Sidebar: FC<{ mobileOpen?: boolean; onNavigate?: () => void }> = ({
       </nav>
       <div className="p-4 border-t border-[var(--color-border)]">
         <div className="text-xs text-[var(--color-text-muted)] text-center">
-          EsportsManager v1.0
+          ArenaHub v1.0
         </div>
       </div>
     </aside>

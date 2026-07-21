@@ -50,8 +50,8 @@ export function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <Link to="/" className="auth-logo" aria-label="EsportsManager home">
-          <Trophy />
+        <Link to="/" className="auth-logo bg-transparent border-0" aria-label="ArenaHub home">
+          <img src="/logo.png" alt="ArenaHub" className="h-10 w-auto object-contain" />
         </Link>
         <div className="text-center">
           <h1>Create your account</h1>

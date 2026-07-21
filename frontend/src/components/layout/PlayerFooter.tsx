@@ -5,8 +5,8 @@ export function PlayerFooter() {
     <footer className="player-footer">
       <div className="player-footer-grid">
         <div className="player-footer-col">
-          <Link to="/" className="font-bold text-xl text-white tracking-tight flex items-center gap-2 mb-4">
-            <span className="text-[var(--color-primary)]">Esports</span>Manager
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="ArenaHub" className="h-8 w-auto object-contain" />
           </Link>
           <p className="text-sm text-[var(--color-text-muted)] mt-4">
             The ultimate platform for competitive gaming. Join tournaments, build teams, and climb the leaderboards.
@@ -44,7 +44,7 @@ export function PlayerFooter() {
       </div>
       
       <div className="mt-12 pt-8 border-t border-[var(--color-border)] text-center text-sm text-[var(--color-text-muted)]">
-        &copy; {new Date().getFullYear()} EsportsManager. All rights reserved.
+        &copy; {new Date().getFullYear()} ArenaHub. All rights reserved.
       </div>
     </footer>
   );

@@ -114,6 +114,53 @@ public class TournamentRegistrationService {
         return toResponse(registration);
     }
 
+    @Transactional
+    public RegistrationResponse directAdd(
+            UUID tournamentId,
+            UUID actorId,
+            UUID teamId
+    ) {
+        Tournament tournament = tournamentAccessService.requireManager(tournamentId, actorId);
+        Team team = teamService.requireTeam(teamId);
+        if (!team.getGame().getId().equals(tournament.getGame().getId())) {
+            throw new BadRequestException("Team and tournament games do not match");
+        }
+        if (registrationRepository.findByTournamentIdAndTeamId(tournamentId, teamId).isPresent()) {
+            throw new ConflictException("This team is already registered");
+        }
+        long approvedRegistrations = registrationRepository.countByTournamentIdAndStatus(
+                tournamentId, RegistrationStatus.APPROVED);
+        if (approvedRegistrations >= tournament.getMaximumTeams()) {
+            throw new ConflictException("Tournament capacity has been reached");
+        }
+
+        List<TeamMember> activeMembers = teamMemberRepository.findAllByTeamIdOrderByRoleAscCreatedAtAsc(teamId).stream()
+                .filter(TeamMember::isActive)
+                .toList();
+
+        if (activeMembers.size() < tournament.getMinimumRosterSize()
+                || activeMembers.size() > tournament.getMaximumRosterSize()) {
+            throw new BadRequestException("Team's active roster size is outside tournament limits");
+        }
+        if (!tournament.isAllowSubstitutes()
+                && activeMembers.stream().anyMatch(member -> member.getRole() == RosterRole.SUBSTITUTE)) {
+            throw new BadRequestException("This tournament does not allow substitutes, but team has them");
+        }
+
+        TournamentRegistration registration = new TournamentRegistration();
+        registration.setTournament(tournament);
+        registration.setTeam(team);
+        registration.setSubmittedBy(requireUser(actorId));
+        registration.setSubmittedAt(LocalDateTime.now(ZoneOffset.UTC));
+        registration.setStatus(RegistrationStatus.APPROVED);
+        registration.setReviewedBy(requireUser(actorId));
+        registration.setReviewedAt(LocalDateTime.now(ZoneOffset.UTC));
+        registrationRepository.save(registration);
+
+        snapshotRoster(registration, activeMembers);
+        return toResponse(registration);
+    }
+
     @Transactional(readOnly = true)
     public PagedResponse<RegistrationResponse> list(
             UUID tournamentId,

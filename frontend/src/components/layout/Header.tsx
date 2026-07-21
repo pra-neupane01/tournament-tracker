@@ -23,8 +23,9 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Link to="/" className="font-bold text-lg text-[var(--color-primary)] tracking-tight">
-          EsportsManager
+        <img src="/logo.png" alt="ArenaHub" className="h-6 w-auto object-contain hidden md:block" />
+        <Link to="/" className="font-bold text-lg text-[var(--color-primary)] tracking-tight md:hidden">
+          ArenaHub
         </Link>
       </div>
       

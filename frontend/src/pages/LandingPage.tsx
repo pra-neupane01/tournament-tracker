@@ -17,7 +17,7 @@ export const LandingPage: FC = () => {
         </div>
         
         <h1 className="text-4xl md:text-6xl font-extrabold text-[var(--color-text-main)] tracking-tight">
-          Esports Tournament <br className="hidden md:block" />
+          ArenaHub Tournament <br className="hidden md:block" />
           <span className="text-[var(--color-primary)]">Management System</span>
         </h1>
         

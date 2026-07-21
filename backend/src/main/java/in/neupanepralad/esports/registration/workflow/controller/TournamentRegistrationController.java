@@ -43,6 +43,19 @@ public class TournamentRegistrationController {
         );
     }
 
+    @PostMapping("/tournaments/{tournamentId}/direct-registrations")
+    @ResponseStatus(HttpStatus.CREATED)
+    public APIResponse<RegistrationResponse> directAdd(
+            @PathVariable UUID tournamentId,
+            Authentication authentication,
+            @Valid @RequestBody in.neupanepralad.esports.registration.workflow.dto.RegistrationDirectAddRequest request
+    ) {
+        return APIResponse.success(
+                "Tournament registration directly added",
+                registrationService.directAdd(tournamentId, userId(authentication), request.teamId())
+        );
+    }
+
     @GetMapping("/tournaments/{tournamentId}/registrations")
     public APIResponse<PagedResponse<RegistrationResponse>> list(
             @PathVariable UUID tournamentId,
