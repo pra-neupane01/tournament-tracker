@@ -32,7 +32,6 @@ export function PlayerHeader() {
     { to: '/games', label: 'Games' },
     { to: '/tournaments', label: 'Tournaments' },
     { to: '/teams', label: 'My Team' },
-    { to: '/tournaments', label: 'My Tournaments' },
     { to: '/matches', label: 'Results' },
   ];
 
