@@ -2215,3 +2215,122 @@
     }
   }
 }
+
+.arena-home__featured {
+  padding: 1.35rem 3.75% 1.15rem;
+  background: #0b0e13;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.arena-home__section-heading {
+  margin-bottom: 0.9rem;
+}
+.arena-home__section-heading h2 {
+  margin: 0;
+  color: #e6e1eb;
+  font-size: 0.92rem;
+  letter-spacing: -0.02em;
+}
+.arena-home__section-heading p {
+  margin: 0.35rem 0 0;
+  color: #918c9c;
+  font-size: 0.6rem;
+}
+.arena-home__game-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.arena-home__game-card {
+  aspect-ratio: 1.48;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #171b20;
+  border: 1px solid #282d34;
+  border-radius: 6px;
+}
+.arena-home__game-card img,
+.arena-home__game-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.arena-home__game-card img {
+  object-fit: cover;
+  filter: saturate(0.75);
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease;
+}
+.arena-home__game-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 7, 10, 0.08) 25%,
+    rgba(5, 7, 10, 0.9) 100%
+  );
+}
+.arena-home__game-card:hover img {
+  transform: scale(1.05);
+  filter: saturate(1);
+}
+.arena-home__game-info {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.65rem;
+  left: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.arena-home__game-info strong {
+  color: #e7e4e9;
+  font-size: 0.9rem;
+}
+.arena-home__game-info small {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #a9df25;
+  font-size: 0.48rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.arena-home__game-info i {
+  width: 5px;
+  height: 5px;
+  display: inline-block;
+  background: #a9df25;
+  border-radius: 50%;
+}
+
+.arena-home__footer {
+  min-height: 47px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 3.75%;
+  background: #0b0e13;
+}
+.arena-home__footer nav {
+  display: flex;
+  gap: 1rem;
+  margin: 0 auto;
+}
+.arena-home__footer nav a,
+.arena-home__footer small {
+  color: #98939e;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.arena-home__footer nav a:hover {
+  color: #d1b6ff;
+}
+.arena-home__footer small {
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
