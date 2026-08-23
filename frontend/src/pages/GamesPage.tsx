@@ -17,6 +17,7 @@ import { useAuthStore } from "../features/auth/authStore";
 import { gameService } from "../features/games/gameService";
 import type { GameInput, GamePlatform } from "../features/games/types";
 import { getErrorMessage } from "../utils/apiError";
+import { useNavigate } from "react-router-dom";
 
 const emptyGame: GameInput = {
   name: "",
@@ -58,7 +59,10 @@ const gamePresentation: Record<
   },
 };
 
+const referenceImage = "/ArenaHub%20-%20Games%20Discovery.png";
+
 export function GamesPage() {
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -170,7 +174,7 @@ export function GamesPage() {
             return (
               <article className="games-discovery-card" key={item.id}>
                 <div className="games-discovery-card__image">
-                  <img src={presentation.image} alt="" loading="lazy" />
+                  <img src={referenceImage} alt="" loading="lazy" className={`games-discovery-card__reference-image games-discovery-card__reference-image--${item.slug}`} />
                   <span>
                     <i /> {presentation.count} active
                   </span>
@@ -192,6 +196,7 @@ export function GamesPage() {
                     </div>
                     <button
                       className="games-discovery-view-button"
+                      onClick={() => navigate(`/games/${item.slug}`)}
                       type="button"
                     >
                       View <span>→</span>

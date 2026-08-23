@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 .arena-home a:focus-visible,
 .arena-home button:focus-visible {
   outline: 2px solid #c09aff;
@@ -394,8 +396,137 @@
     grid-template-columns: 1fr;
   }
 }
-@import "tailwindcss";
 
+/* Games discovery reference layout */
+.arena-navbar {
+  background: #0f1014;
+  border-bottom-color: #292a32;
+}
+
+.arena-navbar__inner {
+  max-width: none;
+  padding: 0 48px;
+}
+
+.arena-brand__arena,
+.arena-brand__hub {
+  color: #caaeff;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.arena-brand__hub { color: #caaeff; }
+
+.arena-nav {
+  margin-right: auto;
+  margin-left: 24px;
+  gap: 17px;
+}
+
+.arena-nav__link {
+  padding: 5px 0;
+  color: #c6c0cf;
+  border-radius: 0;
+  font-family: "IBM Plex Mono", "Space Mono", monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.arena-nav__link:hover { background: transparent; color: #f1eaff; }
+.arena-nav__link--active { color: #d7c2ff; }
+.arena-nav__link--active::after { width: 100%; background: #b78cff; box-shadow: none; }
+
+.arena-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.arena-header-search {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 252px;
+  height: 56px;
+  padding: 0 17px;
+  color: #c9c4d2;
+  background: #292a30;
+  border: 1px solid #484752;
+  border-radius: 30px;
+}
+
+.arena-header-search svg { width: 20px; height: 20px; }
+.arena-header-search input {
+  width: 100%;
+  color: #f0ecf5;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: 16px "Space Grotesk", sans-serif;
+}
+.arena-header-search input::placeholder { color: #c2bcc9; }
+.arena-header-actions .notification-center .icon-button { color: #d9d2df; }
+.arena-profile-pill { width: 31px; height: 31px; padding: 0; border-color: #45404f; background: #17151f; }
+.arena-profile-pill__avatar { width: 100%; height: 100%; background: radial-gradient(circle at 50% 25%, #8b52bd, #171120 60%); }
+.arena-profile-pill__name { display: none; }
+.arena-logout-btn { display: none; }
+
+.games-discovery-page { background: #101114; }
+.games-discovery-content { width: min(1184px, calc(100% - 96px)); padding-top: 31px; padding-bottom: 35px; }
+.games-discovery-heading h1 { font-size: 50px; letter-spacing: -0.065em; }
+.games-discovery-heading p { margin-top: 11px; font-size: 18px; line-height: 1.6; }
+.games-discovery-toolbar { margin: -42px 0 32px; }
+.games-discovery-search { display: none; }
+.games-discovery-filter { height: 43px; padding: 0 16px; font-family: "IBM Plex Mono", monospace; font-weight: 500; }
+.games-discovery-grid { gap: 16px; }
+.games-discovery-card { border-radius: 12px; }
+.games-discovery-card__image { height: 192px; }
+.games-discovery-card__image img.games-discovery-card__reference-image {
+  position: absolute;
+  left: -48px;
+  top: -248px;
+  width: 1280px;
+  max-width: none;
+  height: 760px;
+  object-fit: initial;
+  filter: none;
+}
+.games-discovery-card__image img.games-discovery-card__reference-image--pubg-mobile { left: -448px; }
+.games-discovery-card__image img.games-discovery-card__reference-image--efootball { left: -848px; }
+.games-discovery-card__body { padding: 16px; }
+.games-discovery-card__title h2 { font-size: 24px; }
+.games-discovery-card__body > p { margin-top: 16px; font-size: 16px; line-height: 1.5; }
+.games-discovery-view-button { min-width: 100px; height: 38px; padding: 0 16px; }
+
+.player-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 80px;
+  box-sizing: border-box;
+  margin-top: auto;
+  padding: 0 48px;
+  background: #0c0d10;
+  border-top: 1px solid #34343d;
+}
+.player-footer__brand { color: #caaeff; font-size: 25px; font-weight: 800; letter-spacing: -0.06em; }
+.player-footer nav { display: flex; gap: 25px; margin: 0 auto; }
+.player-footer nav a { color: #c6c0cf; font: 12px "IBM Plex Mono", monospace; letter-spacing: .08em; }
+.player-footer__copyright { color: #c6c0cf; font-size: 16px; }
+
+@media (max-width: 800px) {
+  .arena-navbar__inner, .player-footer { padding-left: 20px; padding-right: 20px; }
+  .arena-header-search { width: 42px; padding: 0 11px; border: 0; background: transparent; }
+  .arena-header-search input { display: none; }
+  .games-discovery-content { width: min(100% - 32px, 600px); }
+  .games-discovery-toolbar { margin: 20px 0 24px; }
+  .player-footer { flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px; }
+  .player-footer nav { margin-left: auto; }
+  .player-footer__copyright { width: 100%; text-align: center; }
+}
 @theme {
   --color-background: #0f172a;
   --color-surface: #1e293b;
@@ -2729,4 +2860,54 @@
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
+}
+
+/* Final reference-page overrides */
+.arena-navbar { background: #0f1014; border-bottom-color: #292a32; }
+.arena-navbar__inner { max-width: none; padding-left: 48px; padding-right: 48px; }
+.arena-brand__arena, .arena-brand__hub { color: #caaeff; font-size: 25px; letter-spacing: -.06em; }
+.arena-nav { margin-left: 24px; margin-right: auto; gap: 17px; }
+.arena-nav__link { padding: 5px 0; color: #c6c0cf; border-radius: 0; font-family: "IBM Plex Mono", "Space Mono", monospace; font-size: 12px; font-weight: 500; letter-spacing: .08em; }
+.arena-nav__link:hover { background: transparent; color: #f1eaff; }
+.arena-nav__link--active { color: #d7c2ff; }
+.arena-nav__link--active::after { width: 100%; background: #b78cff; box-shadow: none; }
+.arena-header-actions { display: flex; align-items: center; gap: 18px; }
+.arena-header-search { display: flex; align-items: center; gap: 14px; width: 252px; height: 56px; padding: 0 17px; color: #c9c4d2; background: #292a30; border: 1px solid #484752; border-radius: 30px; }
+.arena-header-search svg { width: 20px; height: 20px; }
+.arena-header-search input { width: 100%; color: #f0ecf5; background: transparent; border: 0; outline: 0; font: 16px "Space Grotesk", sans-serif; }
+.arena-header-search input::placeholder { color: #c2bcc9; }
+.arena-header-actions .notification-center .icon-button { color: #d9d2df; }
+.arena-profile-pill { width: 31px; height: 31px; padding: 0; border-color: #45404f; background: #17151f; }
+.arena-profile-pill__avatar { width: 100%; height: 100%; background: radial-gradient(circle at 50% 25%, #8b52bd, #171120 60%); }
+.arena-profile-pill__name, .arena-logout-btn { display: none; }
+.games-discovery-page { background: #101114; }
+.games-discovery-content { width: min(1184px, calc(100% - 96px)); padding-top: 31px; padding-bottom: 35px; }
+.games-discovery-heading h1 { font-size: 50px; letter-spacing: -.065em; }
+.games-discovery-heading p { margin-top: 11px; font-size: 18px; line-height: 1.6; }
+.games-discovery-toolbar { margin: -42px 0 32px; }
+.games-discovery-search { display: none; }
+.games-discovery-filter { height: 43px; padding: 0 16px; font-family: "IBM Plex Mono", monospace; font-weight: 500; }
+.games-discovery-grid { gap: 16px; }
+.games-discovery-card__image img.games-discovery-card__reference-image { position: absolute; left: -48px; top: -248px; width: 1280px; max-width: none; height: 760px; object-fit: initial; filter: none; }
+.games-discovery-card__image img.games-discovery-card__reference-image--pubg-mobile { left: -448px; }
+.games-discovery-card__image img.games-discovery-card__reference-image--efootball { left: -848px; }
+.games-discovery-card__body { padding: 16px; }
+.games-discovery-card__title h2 { font-size: 24px; }
+.games-discovery-card__body > p { margin-top: 16px; font-size: 16px; line-height: 1.5; }
+.games-discovery-view-button { min-width: 100px; height: 38px; padding: 0 16px; }
+.player-footer { display: flex; align-items: center; gap: 1rem; min-height: 80px; box-sizing: border-box; margin-top: auto; padding: 0 48px; background: #0c0d10; border-top: 1px solid #34343d; }
+.player-footer__brand { color: #caaeff; font-size: 25px; font-weight: 800; letter-spacing: -.06em; }
+.player-footer nav { display: flex; gap: 25px; margin: 0 auto; }
+.player-footer nav a { color: #c6c0cf; font: 12px "IBM Plex Mono", monospace; letter-spacing: .08em; }
+.player-footer__copyright { color: #c6c0cf; font-size: 16px; }
+
+@media (max-width: 800px) {
+  .arena-navbar__inner, .player-footer { padding-left: 20px; padding-right: 20px; }
+  .arena-header-search { width: 42px; padding: 0 11px; border: 0; background: transparent; }
+  .arena-header-search input { display: none; }
+  .games-discovery-content { width: min(100% - 32px, 600px); }
+  .games-discovery-toolbar { margin: 20px 0 24px; }
+  .player-footer { flex-wrap: wrap; padding-top: 20px; padding-bottom: 20px; }
+  .player-footer nav { margin-left: auto; }
+  .player-footer__copyright { width: 100%; text-align: center; }
 }

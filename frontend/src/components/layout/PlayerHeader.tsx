@@ -1,4 +1,4 @@
-import { LogOut, Menu, User, X } from 'lucide-react';
+import { LogOut, Menu, Search, User, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
@@ -29,10 +29,11 @@ export function PlayerHeader() {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home' },
     { to: '/games', label: 'Games' },
-    { to: '/teams', label: 'My Teams' },
+    { to: '/tournaments', label: 'Tournaments' },
+    { to: '/teams', label: 'My Team' },
     { to: '/tournaments', label: 'My Tournaments' },
+    { to: '/results', label: 'Results' },
   ];
 
   return (
@@ -73,7 +74,11 @@ export function PlayerHeader() {
         </nav>
 
         {/* Right — Actions */}
-        <div className="flex items-center gap-3">
+        <div className="arena-header-actions">
+          <label className="arena-header-search">
+            <Search aria-hidden="true" />
+            <input type="search" placeholder="Search games..." aria-label="Search games" />
+          </label>
           <NotificationCenter />
 
           <Link
