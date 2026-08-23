@@ -7,6 +7,7 @@ import in.neupanepralad.esports.auth.dto.RefreshRequest;
 import in.neupanepralad.esports.auth.dto.RegisterRequest;
 import in.neupanepralad.esports.auth.dto.RegistrationResponse;
 import in.neupanepralad.esports.auth.dto.UserResponse;
+import in.neupanepralad.esports.auth.dto.ProfileSummaryResponse;
 import in.neupanepralad.esports.auth.model.RefreshToken;
 import in.neupanepralad.esports.auth.repository.RefreshTokenRepository;
 import in.neupanepralad.esports.auth.security.JwtService;
@@ -116,6 +117,11 @@ public class AuthService {
     @Transactional(readOnly = true)
     public UserResponse currentUser(UUID userId) {
         return UserResponse.from(requireUser(userId));
+    }
+
+    @Transactional(readOnly = true)
+    public ProfileSummaryResponse profileSummary(UUID userId) {
+        return ProfileSummaryResponse.from(requireUser(userId));
     }
 
     @Transactional

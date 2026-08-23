@@ -6,6 +6,7 @@ import in.neupanepralad.esports.auth.dto.LoginRequest;
 import in.neupanepralad.esports.auth.dto.RefreshRequest;
 import in.neupanepralad.esports.auth.dto.RegisterRequest;
 import in.neupanepralad.esports.auth.dto.UserResponse;
+import in.neupanepralad.esports.auth.dto.ProfileSummaryResponse;
 import in.neupanepralad.esports.auth.dto.EmailTokenRequest;
 import in.neupanepralad.esports.auth.dto.EmailAddressRequest;
 import in.neupanepralad.esports.auth.service.AuthService;
@@ -71,6 +72,14 @@ public class AuthController {
         return APIResponse.success(
                 "Current user retrieved",
                 authService.currentUser(UUID.fromString(authentication.getName()))
+        );
+    }
+
+    @GetMapping("/profile/summary")
+    public APIResponse<ProfileSummaryResponse> profileSummary(Authentication authentication) {
+        return APIResponse.success(
+                "Profile summary retrieved",
+                authService.profileSummary(UUID.fromString(authentication.getName()))
         );
     }
 
