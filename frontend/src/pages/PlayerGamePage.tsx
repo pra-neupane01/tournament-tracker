@@ -9,6 +9,21 @@ import { tournamentService } from '../features/tournaments/tournamentService';
 import type { Game } from '../features/games/types';
 import type { Tournament } from '../features/tournaments/types';
 
+const gameFallbacks: Record<string, Game> = {
+  'free-fire': {
+    id: 'demo-free-fire', name: 'Free Fire', slug: 'free-fire', platform: 'MOBILE', teamSize: 4, substituteLimit: 1,
+    description: 'Drop in, survive, and conquer in fast-paced battle royale tournaments.', active: true,
+  },
+  'pubg-mobile': {
+    id: 'demo-pubg-mobile', name: 'PUBG Mobile', slug: 'pubg-mobile', platform: 'MOBILE', teamSize: 4, substituteLimit: 1,
+    description: 'Compete in tactical mobile battle royale events and climb the rankings.', active: true,
+  },
+  efootball: {
+    id: 'demo-efootball', name: 'eFootball', slug: 'efootball', platform: 'CROSS_PLATFORM', teamSize: 1, substituteLimit: 0,
+    description: 'Experience pure football realism. Compete in 1v1 weekly cups, build your dream squad, and climb the global rankings.', active: true,
+  },
+};
+
 const efootballFallback: Game = {
   id: 'demo-efootball', name: 'eFootball', slug: 'efootball', platform: 'CROSS_PLATFORM', teamSize: 1, substituteLimit: 0,
   description: 'Experience pure football realism. Compete in 1v1 weekly cups, build your dream squad, and climb the global rankings.', active: true,
@@ -22,17 +37,24 @@ const demoTournaments = [
 
 export function PlayerGamePage() {
   const { gameId: slug = '' } = useParams<{ gameId: string }>();
+  const normalizedSlug = slug.toLowerCase().replace(/_/g, '-');
   const [search, setSearch] = useState('');
   const [tab, setTab] = useState<'UPCOMING' | 'ONGOING' | 'COMPLETED'>('UPCOMING');
   const games = useQuery({ queryKey: ['games'], queryFn: () => gameService.list() });
-  const realGame = games.data?.content.find((item) => item.slug === slug || item.id === slug);
-  const isEfootball = slug === 'efootball' || realGame?.name.toLowerCase().includes('efootball');
-  const game = realGame ?? (isEfootball ? efootballFallback : undefined);
+  const realGame = games.data?.content.find((item) => item.slug.toLowerCase().replace(/_/g, '-') === normalizedSlug || item.id === slug);
+  const isEfootball = normalizedSlug === 'efootball' || realGame?.name.toLowerCase().includes('efootball');
+  const game = realGame ?? gameFallbacks[normalizedSlug] ?? (isEfootball ? efootballFallback : undefined);
   const tournaments = useQuery({ queryKey: ['tournaments', 'game', realGame?.id], queryFn: () => tournamentService.list({ gameId: realGame!.id }), enabled: Boolean(realGame?.id) });
   const records = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return (tournaments.data?.content ?? []).filter((item) => item.name.toLowerCase().includes(query));
-  }, [search, tournaments.data]);
+    return (tournaments.data?.content ?? []).filter((item) => {
+      const matchesSearch = item.name.toLowerCase().includes(query);
+      const matchesTab = tab === 'UPCOMING'
+        ? ['PUBLISHED', 'REGISTRATION_OPEN', 'REGISTRATION_CLOSED'].includes(item.status)
+        : tab === 'ONGOING' ? item.status === 'IN_PROGRESS' : item.status === 'COMPLETED';
+      return matchesSearch && matchesTab;
+    });
+  }, [search, tab, tournaments.data]);
 
   if (games.isLoading) return <LoadingState message="Loading game..." />;
   if (!game) return <ErrorState message="Game not found or failed to load." />;
@@ -43,7 +65,7 @@ export function PlayerGamePage() {
       <div className="game-showcase-toolbar"><nav className="game-showcase-tabs" aria-label="Tournament status">{(['UPCOMING', 'ONGOING', 'COMPLETED'] as const).map((item) => <button key={item} className={tab === item ? 'is-active' : ''} onClick={() => setTab(item)}>{item}</button>)}</nav><div className="game-showcase-filters"><label><span>Region: Global</span><ChevronDown /></label><label><span>Format: All</span><ChevronDown /></label></div></div>
       <div className="game-showcase-list-heading"><h2>{tab[0] + tab.slice(1).toLowerCase()} competitions</h2><label className="game-showcase-search"><Search /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search competitions..." /></label></div>
       {tournaments.isError && <p className="game-showcase-note">Showing featured competitions while live data reconnects.</p>}
-      {records.length > 0 ? <div className="game-showcase-cards">{records.map((item) => <TournamentShowcaseCard key={item.id} tournament={item} />)}</div> : isEfootball && tab === 'UPCOMING' ? <div className="game-showcase-cards">{demoTournaments.map((item) => <DemoTournamentCard key={item.name} {...item} />)}</div> : <div className="game-showcase-empty">No {tab.toLowerCase()} competitions match your search.</div>}
+      {records.length > 0 ? <div className="game-showcase-cards">{records.map((item) => <TournamentShowcaseCard key={item.id} tournament={item} />)}</div> : !search.trim() && tab === 'UPCOMING' ? <div className="game-showcase-cards">{demoTournaments.map((item) => <DemoTournamentCard key={item.name} {...item} />)}</div> : <div className="game-showcase-empty">No {tab.toLowerCase()} competitions match your search.</div>}
     </main>
     <footer className="game-showcase-footer"><Link to="/games">ArenaHub</Link><span>Explore tournaments, build your team, and climb the rankings.</span></footer>
   </div>;
