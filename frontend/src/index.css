@@ -67,6 +67,333 @@
     text-align: center;
   }
 }
+
+.games-discovery-page {
+  min-height: calc(100vh - 64px);
+  color: #e7e4ed;
+  background: #0d0f13;
+}
+
+.games-discovery-content {
+  width: min(1184px, calc(100% - 96px));
+  margin: 0 auto;
+  padding: 2.1rem 0 2.2rem;
+}
+
+.games-discovery-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.games-discovery-heading h1 {
+  margin: 0;
+  color: #e9e7ed;
+  font-size: 3rem;
+  line-height: 1.05;
+  letter-spacing: -0.06em;
+  font-weight: 800;
+}
+
+.games-discovery-heading p {
+  margin: 0.9rem 0 0;
+  color: #c1bbc9;
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.games-discovery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin: 2rem 0 2rem;
+}
+
+.games-discovery-search {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 252px;
+  height: 42px;
+  padding: 0 1rem;
+  color: #bbb5c2;
+  background: #25262d;
+  border: 1px solid #45434f;
+  border-radius: 22px;
+}
+
+.games-discovery-search svg {
+  width: 18px;
+  height: 18px;
+}
+.games-discovery-search input {
+  width: 100%;
+  color: #e9e5ee;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 0.95rem;
+}
+.games-discovery-search input::placeholder {
+  color: #bbb5c2;
+}
+
+.games-discovery-filter,
+.games-discovery-view button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  height: 42px;
+  color: #e4dfe9;
+  background: #1f2026;
+  border: 1px solid #44414c;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.games-discovery-filter {
+  padding: 0 1rem;
+}
+.games-discovery-filter svg {
+  width: 15px;
+  height: 15px;
+}
+.games-discovery-view {
+  display: flex;
+  padding: 2px;
+  background: #1d1e24;
+  border: 1px solid #3f3e47;
+  border-radius: 7px;
+}
+.games-discovery-view button {
+  width: 32px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  color: #b8b3c0;
+}
+.games-discovery-view button.is-active {
+  color: #c9a9ff;
+  background: #393841;
+}
+.games-discovery-view svg {
+  width: 17px;
+  height: 17px;
+}
+
+.games-discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.games-discovery-card {
+  position: relative;
+  overflow: hidden;
+  background: #171a20;
+  border: 1px solid #29313d;
+  border-radius: 12px;
+}
+.games-discovery-card__image {
+  height: 192px;
+  position: relative;
+  overflow: hidden;
+  background: #242a32;
+}
+.games-discovery-card__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(9, 12, 16, 0.55));
+}
+.games-discovery-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.8);
+  transition: transform 0.4s ease;
+}
+.games-discovery-card:hover .games-discovery-card__image img {
+  transform: scale(1.04);
+}
+.games-discovery-card__image > span {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.8rem;
+  z-index: 1;
+  padding: 0.25rem 0.65rem;
+  color: #e9e4ed;
+  background: rgba(30, 30, 36, 0.85);
+  border: 1px solid #6a6871;
+  border-radius: 13px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.games-discovery-card__image i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.3rem;
+  background: #b4f338;
+  border-radius: 50%;
+}
+.games-discovery-card__body {
+  padding: 1rem;
+}
+.games-discovery-card__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.games-discovery-card__title h2 {
+  margin: 0;
+  color: #e7e4eb;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+.games-discovery-card__title div {
+  display: flex;
+  gap: 0.3rem;
+}
+.games-discovery-card__title small {
+  padding: 0.3rem 0.5rem;
+  color: #c5c0cb;
+  background: #2b2a31;
+  border: 1px solid #4b4854;
+  border-radius: 4px;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.games-discovery-card__body > p {
+  min-height: 50px;
+  margin: 1rem 0 1.25rem;
+  color: #bbb5c2;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.games-discovery-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid #363942;
+}
+.games-discovery-avatars {
+  display: flex;
+  align-items: center;
+  padding-left: 0.3rem;
+}
+.games-discovery-avatars b {
+  width: 23px;
+  height: 23px;
+  margin-left: -0.3rem;
+  background: radial-gradient(
+    circle at 55% 40%,
+    #45b8de 0 18%,
+    #1d315f 20% 55%,
+    #111923 57%
+  );
+  border: 2px solid #262a31;
+  border-radius: 50%;
+}
+.games-discovery-avatars b:nth-child(2) {
+  background: radial-gradient(
+    circle at 40% 40%,
+    #f4b44e 0 17%,
+    #552b73 20% 55%,
+    #111923 57%
+  );
+}
+.games-discovery-avatars b:nth-child(3) {
+  background: radial-gradient(
+    circle at 50% 40%,
+    #b58bff 0 18%,
+    #30215c 20% 55%,
+    #111923 57%
+  );
+}
+.games-discovery-avatars small {
+  margin-left: 0.2rem;
+  padding: 0.32rem 0.4rem;
+  color: #9a95a0;
+  background: #25262d;
+  border-radius: 50%;
+  font-size: 0.55rem;
+}
+.games-discovery-view-button {
+  min-width: 100px;
+  padding: 0.65rem 0.9rem;
+  color: #291940;
+  background: #a875ff;
+  border: 0;
+  border-radius: 7px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.games-discovery-view-button span {
+  margin-left: 0.35rem;
+  font-size: 1rem;
+}
+.games-discovery-admin-actions {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.3rem;
+  z-index: 2;
+}
+.games-discovery-grid--list {
+  grid-template-columns: 1fr;
+}
+.games-discovery-grid--list .games-discovery-card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+.games-discovery-grid--list .games-discovery-card__image {
+  height: 100%;
+  min-height: 192px;
+}
+
+@media (max-width: 800px) {
+  .games-discovery-content {
+    width: min(100% - 2rem, 600px);
+    padding-top: 1.5rem;
+  }
+  .games-discovery-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .games-discovery-heading h1 {
+    font-size: 2.5rem;
+  }
+  .games-discovery-heading p {
+    font-size: 1rem;
+  }
+  .games-discovery-heading__break {
+    display: none;
+  }
+  .games-discovery-toolbar {
+    justify-content: stretch;
+    margin-top: 1.4rem;
+  }
+  .games-discovery-search {
+    flex: 1;
+  }
+  .games-discovery-grid {
+    grid-template-columns: 1fr;
+  }
+}
 @import "tailwindcss";
 
 @theme {
