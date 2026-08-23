@@ -50,9 +50,9 @@ export function PlayerGamePage() {
 }
 
 function TournamentShowcaseCard({ tournament }: { tournament: Tournament }) {
-  return <DemoTournamentCard name={tournament.name} meta={`${tournament.maximumTeams} Teams • ${tournament.format.replaceAll('_', ' ')}`} label={tournament.status.replaceAll('_', ' ')} tone={tournament.status === 'IN_PROGRESS' ? 'live' : 'open'} action="VIEW DETAILS" icon={CalendarDays} />;
+  return <DemoTournamentCard link={`/tournaments/${tournament.id}`} name={tournament.name} meta={`${tournament.maximumTeams} Teams • ${tournament.format.replaceAll('_', ' ')}`} label={tournament.status.replaceAll('_', ' ')} tone={tournament.status === 'IN_PROGRESS' ? 'live' : 'open'} action="VIEW DETAILS" icon={CalendarDays} />;
 }
 
-function DemoTournamentCard({ label, tone, name, meta, detail, action, icon: Icon }: { label: string; tone: string; name: string; meta: string; detail?: string; action: string; icon: typeof Trophy }) {
-  return <article className="game-showcase-card"><div className={`game-showcase-card__label ${tone}`}><i />{label}<Icon /></div><h3>{name}</h3><p>{meta}</p>{detail && <small>{detail}</small>}<button>{action}</button></article>;
+function DemoTournamentCard({ label, tone, name, meta, detail, action, link = '/tournaments', icon: Icon }: { label: string; tone: string; name: string; meta: string; detail?: string; action: string; link?: string; icon: typeof Trophy }) {
+  return <article className="game-showcase-card"><div className={`game-showcase-card__label ${tone}`}><i />{label}<Icon /></div><h3>{name}</h3><p>{meta}</p>{detail && <small>{detail}</small>}<Link className="game-showcase-card__action" to={link}>{action}</Link></article>;
 }
