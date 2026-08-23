@@ -10,5 +10,7 @@ export const RoleBasedLayout: FC = () => {
     return <PlayerLayout />;
   }
 
+  // SUPER_ADMIN and ORGANIZER share the operations shell; their permissions
+  // are enforced by the API and reflected in the sidebar.
   return <DashboardLayout />;
 };

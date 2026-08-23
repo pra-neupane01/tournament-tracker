@@ -1,133 +1,58 @@
 import { useQuery } from '@tanstack/react-query';
-import { useParams, Link } from 'react-router-dom';
-import { ChevronLeft, Search } from 'lucide-react';
-import { useState } from 'react';
+import { CalendarDays, ChevronDown, Clock3, Search, Trophy } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ErrorState } from '../components/common/ErrorState';
+import { LoadingState } from '../components/common/LoadingState';
 import { gameService } from '../features/games/gameService';
 import { tournamentService } from '../features/tournaments/tournamentService';
-import { PlayerTournamentCard } from '../components/player/PlayerTournamentCard';
-import { LoadingState } from '../components/common/LoadingState';
-import { ErrorState } from '../components/common/ErrorState';
-import { EmptyState } from '../components/common/EmptyState';
+import type { Game } from '../features/games/types';
+import type { Tournament } from '../features/tournaments/types';
 
-// Fallback images matching the home page
-const gameImages: Record<string, string> = {
-  'free-fire': 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1600',
-  'pubg-mobile': 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&q=80&w=1600',
-  'efootball': 'https://images.unsplash.com/photo-1518605368461-1f12523b0542?auto=format&fit=crop&q=80&w=1600',
-  'mobile-legends': 'https://images.unsplash.com/photo-1538481199005-27dec2909f41?auto=format&fit=crop&q=80&w=1600',
+const efootballFallback: Game = {
+  id: 'demo-efootball', name: 'eFootball', slug: 'efootball', platform: 'CROSS_PLATFORM', teamSize: 1, substituteLimit: 0,
+  description: 'Experience pure football realism. Compete in 1v1 weekly cups, build your dream squad, and climb the global rankings.', active: true,
 };
 
+const demoTournaments = [
+  { label: 'LIVE NOW', tone: 'live', name: 'Pro League Season 4 – EU', meta: '16/16 Teams • $100,000 Prize Pool', action: 'VIEW DETAILS', icon: Trophy },
+  { label: 'REG OPEN', tone: 'open', name: 'Weekend Kickoff Cup', meta: '42/64 Players • $5,000 Prize Pool', detail: 'STARTS OCT 28', action: 'REGISTER NOW', icon: CalendarDays },
+  { label: 'CLOSING SOON', tone: 'closing', name: 'Global Masters Qualifiers', meta: '118/128 Players • $50,000 Prize Pool', action: 'REGISTER NOW', icon: Clock3 },
+];
+
 export function PlayerGamePage() {
-  const { gameId: slug } = useParams<{ gameId: string }>();
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // 1. Fetch games to find the real game ID
-  const games = useQuery({
-    queryKey: ['games'],
-    queryFn: () => gameService.list(),
-  });
+  const { gameId: slug = '' } = useParams<{ gameId: string }>();
+  const [search, setSearch] = useState('');
+  const [tab, setTab] = useState<'UPCOMING' | 'ONGOING' | 'COMPLETED'>('UPCOMING');
+  const games = useQuery({ queryKey: ['games'], queryFn: () => gameService.list() });
+  const realGame = games.data?.content.find((item) => item.slug === slug || item.id === slug);
+  const isEfootball = slug === 'efootball' || realGame?.name.toLowerCase().includes('efootball');
+  const game = realGame ?? (isEfootball ? efootballFallback : undefined);
+  const tournaments = useQuery({ queryKey: ['tournaments', 'game', realGame?.id], queryFn: () => tournamentService.list({ gameId: realGame!.id }), enabled: Boolean(realGame?.id) });
+  const records = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return (tournaments.data?.content ?? []).filter((item) => item.name.toLowerCase().includes(query));
+  }, [search, tournaments.data]);
 
-  const game = games.data?.content.find((g) => g.slug === slug || g.id === slug);
-  const heroImage = slug && gameImages[slug] ? gameImages[slug] : gameImages['free-fire'];
+  if (games.isLoading) return <LoadingState message="Loading game..." />;
+  if (!game) return <ErrorState message="Game not found or failed to load." />;
 
-  // 2. Fetch tournaments for this game
-  const tournaments = useQuery({
-    queryKey: ['tournaments', 'game', game?.id],
-    queryFn: () => tournamentService.list({ gameId: game?.id }),
-    enabled: !!game?.id,
-  });
+  return <div className={`game-showcase-page ${isEfootball ? 'game-showcase-page--efootball' : ''}`}>
+    <section className="game-showcase-hero"><div className="game-showcase-hero__shade" /><div className="game-showcase-hero__content"><h1>{game.name}</h1><p>{game.description ?? `Compete in the best ${game.name} tournaments.`}</p></div></section>
+    <main className="game-showcase-content">
+      <div className="game-showcase-toolbar"><nav className="game-showcase-tabs" aria-label="Tournament status">{(['UPCOMING', 'ONGOING', 'COMPLETED'] as const).map((item) => <button key={item} className={tab === item ? 'is-active' : ''} onClick={() => setTab(item)}>{item}</button>)}</nav><div className="game-showcase-filters"><label><span>Region: Global</span><ChevronDown /></label><label><span>Format: All</span><ChevronDown /></label></div></div>
+      <div className="game-showcase-list-heading"><h2>{tab[0] + tab.slice(1).toLowerCase()} competitions</h2><label className="game-showcase-search"><Search /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search competitions..." /></label></div>
+      {tournaments.isError && <p className="game-showcase-note">Showing featured competitions while live data reconnects.</p>}
+      {records.length > 0 ? <div className="game-showcase-cards">{records.map((item) => <TournamentShowcaseCard key={item.id} tournament={item} />)}</div> : isEfootball && tab === 'UPCOMING' ? <div className="game-showcase-cards">{demoTournaments.map((item) => <DemoTournamentCard key={item.name} {...item} />)}</div> : <div className="game-showcase-empty">No {tab.toLowerCase()} competitions match your search.</div>}
+    </main>
+    <footer className="game-showcase-footer"><Link to="/games">ArenaHub</Link><span>Explore tournaments, build your team, and climb the rankings.</span></footer>
+  </div>;
+}
 
-  if (games.isLoading) {
-    return <LoadingState message="Loading game..." />;
-  }
+function TournamentShowcaseCard({ tournament }: { tournament: Tournament }) {
+  return <DemoTournamentCard name={tournament.name} meta={`${tournament.maximumTeams} Teams • ${tournament.format.replaceAll('_', ' ')}`} label={tournament.status.replaceAll('_', ' ')} tone={tournament.status === 'IN_PROGRESS' ? 'live' : 'open'} action="VIEW DETAILS" icon={CalendarDays} />;
+}
 
-  if (games.isError || !game) {
-    return (
-      <div className="p-8">
-        <Link to="/" className="back-link mb-6 inline-flex items-center gap-2 text-white">
-          <ChevronLeft className="h-4 w-4" /> Back to Games
-        </Link>
-        <ErrorState message="Game not found or failed to load." />
-      </div>
-    );
-  }
-
-  const filteredTournaments = tournaments.data?.content.filter((t) => 
-    t.name.toLowerCase().includes(searchQuery.toLowerCase())
-  ) ?? [];
-
-  const upcomingTournaments = filteredTournaments.filter(t => t.status === 'PUBLISHED' || t.status === 'REGISTRATION_OPEN');
-  const ongoingTournaments = filteredTournaments.filter(t => t.status === 'IN_PROGRESS');
-
-  return (
-    <div className="w-full flex flex-col min-h-full pb-12">
-      {/* Game Hero */}
-      <section className="relative h-64 md:h-80 flex items-end pb-8 border-b border-[var(--color-border)]">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40" 
-          style={{ backgroundImage: `url(${heroImage})` }} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/80 to-transparent" />
-        
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-start gap-4">
-          <Link to="/" className="back-link text-white/70 hover:text-white transition-colors">
-            <ChevronLeft /> Back to Games
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">{game.name}</h1>
-          <p className="text-[var(--color-text-muted)] max-w-xl">
-            {game.description || `Compete in the best ${game.name} tournaments.`}
-          </p>
-        </div>
-      </section>
-
-      {/* Content */}
-      <div className="w-full max-w-7xl mx-auto px-6 mt-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-          <h2 className="text-2xl font-bold text-white">Tournaments</h2>
-          
-          <div className="search-box w-full md:w-auto max-w-sm">
-            <Search />
-            <input 
-              type="text" 
-              placeholder="Search tournaments..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-white placeholder:text-white/50"
-            />
-          </div>
-        </div>
-
-        {tournaments.isLoading && <LoadingState message="Loading tournaments..." />}
-        {tournaments.isError && <ErrorState message="Failed to load tournaments." />}
-
-        {!tournaments.isLoading && filteredTournaments.length === 0 && (
-          <EmptyState title="No tournaments found" message="Check back later for new competitions." />
-        )}
-
-        {ongoingTournaments.length > 0 && (
-          <div className="mb-12">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Ongoing Now
-            </h3>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {ongoingTournaments.map(t => (
-                <PlayerTournamentCard key={t.id} tournament={t} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {upcomingTournaments.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Upcoming</h3>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {upcomingTournaments.map(t => (
-                <PlayerTournamentCard key={t.id} tournament={t} />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+function DemoTournamentCard({ label, tone, name, meta, detail, action, icon: Icon }: { label: string; tone: string; name: string; meta: string; detail?: string; action: string; icon: typeof Trophy }) {
+  return <article className="game-showcase-card"><div className={`game-showcase-card__label ${tone}`}><i />{label}<Icon /></div><h3>{name}</h3><p>{meta}</p>{detail && <small>{detail}</small>}<button>{action}</button></article>;
 }

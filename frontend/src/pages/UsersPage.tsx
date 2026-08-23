@@ -12,9 +12,6 @@ import { getErrorMessage } from '../utils/apiError';
 const roles: UserRole[] = [
   'SUPER_ADMIN',
   'ORGANIZER',
-  'TOURNAMENT_MANAGER',
-  'REFEREE',
-  'TEAM_MANAGER',
   'PLAYER',
 ];
 

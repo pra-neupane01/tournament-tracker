@@ -1,9 +1,6 @@
 export type UserRole =
   | 'SUPER_ADMIN'
   | 'ORGANIZER'
-  | 'TOURNAMENT_MANAGER'
-  | 'REFEREE'
-  | 'TEAM_MANAGER'
   | 'PLAYER';
 
 export interface AuthUser {

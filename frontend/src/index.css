@@ -398,6 +398,35 @@
   }
 }
 
+.game-showcase-page { min-height: 100%; background: #101114; color: #e7e4ed; }
+.game-showcase-hero { position: relative; min-height: 400px; display: flex; align-items: flex-end; overflow: hidden; background: url('/efootball-card.png') center 42% / cover; border-bottom: 1px solid #37343d; }
+.game-showcase-hero__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,9,18,.3), #101114 94%); }
+.game-showcase-hero__content { position: relative; width: min(1184px, calc(100% - 96px)); margin: 0 auto; padding: 0 0 46px; }
+.game-showcase-hero h1 { margin: 0; font-size: 50px; letter-spacing: -.06em; }
+.game-showcase-hero p { max-width: 680px; margin: 14px 0 0; color: #c9c2d0; font-size: 18px; line-height: 1.6; }
+.game-showcase-content { width: min(1184px, calc(100% - 96px)); margin: 0 auto; padding: 30px 0 36px; }
+.game-showcase-toolbar, .game-showcase-list-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.game-showcase-toolbar { padding-bottom: 16px; border-bottom: 1px solid #36343c; }
+.game-showcase-tabs { display: flex; gap: 26px; }
+.game-showcase-tabs button { padding: 8px 0 10px; color: #bcb5c7; background: transparent; border: 0; border-bottom: 2px solid transparent; font: 12px "IBM Plex Mono", monospace; letter-spacing: .1em; }
+.game-showcase-tabs button.is-active { color: #ceb5ff; border-bottom-color: #b487ff; }
+.game-showcase-filters { display: flex; gap: 12px; }
+.game-showcase-filters label { display: flex; align-items: center; justify-content: space-between; gap: 34px; min-width: 182px; padding: 11px 14px; color: #ddd7e0; background: #1a1b20; border: 1px solid #383740; font-size: 15px; }
+.game-showcase-filters svg { width: 15px; }
+.game-showcase-list-heading { margin: 24px 0; }
+.game-showcase-list-heading h2 { margin: 0; color: #dfdce4; font-size: 22px; }
+.game-showcase-search { display: flex; align-items: center; gap: 8px; width: 230px; padding: 8px 12px; border: 1px solid #3b3942; color: #aca5b4; }
+.game-showcase-search svg { width: 16px; }.game-showcase-search input { width: 100%; color: #eeeaf2; background: none; border: 0; outline: 0; }
+.game-showcase-note, .game-showcase-empty { color: #aaa3b2; padding: 12px 0; }
+.game-showcase-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.game-showcase-card { min-height: 240px; display: flex; flex-direction: column; padding: 24px; background: #1a1b20; border: 1px solid #373640; border-radius: 7px; }
+.game-showcase-card__label { display: flex; align-items: center; gap: 9px; color: #c9c0d2; font: 12px "IBM Plex Mono", monospace; letter-spacing: .08em; }
+.game-showcase-card__label i { width: 8px; height: 8px; background: #c1b5cf; border-radius: 50%; }.game-showcase-card__label.live { color: #ddd2e6; }.game-showcase-card__label.live i { background: #9ded38; }.game-showcase-card__label.closing { color: #f5b5be; }.game-showcase-card__label.closing i { background: #ffabb8; }
+.game-showcase-card__label svg { width: 20px; height: 20px; margin-left: auto; color: #aaa1b4; }
+.game-showcase-card h3 { margin: 22px 0 10px; font-size: 25px; letter-spacing: -.035em; }.game-showcase-card p { margin: 0; color: #c0bac8; font-size: 16px; }.game-showcase-card small { margin-top: 12px; color: #a8a0b3; font: 11px "IBM Plex Mono", monospace; letter-spacing: .1em; }.game-showcase-card button { width: 100%; margin-top: auto; padding: 11px; color: #29113e; background: #713add; border: 1px solid #8651ed; font: 12px "IBM Plex Mono", monospace; letter-spacing: .1em; }.game-showcase-card:first-child button { color: #eee9f1; background: transparent; border-color: #3d3a43; }
+.game-showcase-footer { display: flex; align-items: center; gap: 24px; min-height: 96px; padding: 0 48px; border-top: 1px solid #35343c; }.game-showcase-footer a { color: #c8a9ff; font-size: 25px; font-weight: 800; }.game-showcase-footer span { margin-left: auto; color: #aaa3b1; font-size: 14px; }
+@media (max-width: 800px) { .game-showcase-hero__content, .game-showcase-content { width: min(100% - 32px, 600px); }.game-showcase-toolbar, .game-showcase-list-heading { align-items: stretch; flex-direction: column; }.game-showcase-filters { flex-wrap: wrap; }.game-showcase-filters label { flex: 1; }.game-showcase-cards { grid-template-columns: 1fr; }.game-showcase-footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }.game-showcase-footer span { margin: 0; } }
+
 /* Games discovery reference layout */
 .arena-navbar {
   background: #0f1014;
