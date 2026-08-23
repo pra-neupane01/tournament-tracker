@@ -1,6 +1,5 @@
 package in.neupanepralad.esports.notification.service;
 
-import in.neupanepralad.esports.common.exception.ForbiddenException;
 import in.neupanepralad.esports.common.exception.ResourceNotFoundException;
 import in.neupanepralad.esports.common.pagination.PagedResponse;
 import in.neupanepralad.esports.notification.dto.NotificationResponse;
@@ -115,11 +114,8 @@ public class NotificationService {
 
     @Transactional
     public NotificationResponse markRead(UUID notificationId, UUID userId) {
-        Notification notification = notificationRepository.findById(notificationId)
+        Notification notification = notificationRepository.findByIdAndUserId(notificationId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
-        if (!notification.getUser().getId().equals(userId)) {
-            throw new ForbiddenException("Notification does not belong to this user");
-        }
         if (!notification.isRead()) {
             notification.setRead(true);
             notification.setReadAt(LocalDateTime.now(ZoneOffset.UTC));

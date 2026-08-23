@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
     Page<Notification> findAllByUserId(UUID userId, Pageable pageable);
 
+    java.util.Optional<Notification> findByIdAndUserId(UUID id, UUID userId);
+
     long countByUserIdAndReadFalse(UUID userId);
 
     @Modifying
