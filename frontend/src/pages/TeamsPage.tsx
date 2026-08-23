@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Edit3, Plus, Shield, Trash2, UserPlus, Users } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { Edit3, LogOut, Plus, Settings, Shield, Trash2, UserPlus, Users } from 'lucide-react';
+import { useEffect, useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { LoadingState } from '../components/common/LoadingState';
@@ -16,6 +17,7 @@ import type {
   TeamInput,
 } from '../features/teams/types';
 import { getErrorMessage } from '../utils/apiError';
+import { useAuthStore } from '../features/auth/authStore';
 
 const emptyTeam: TeamInput = {
   name: '',
@@ -34,6 +36,7 @@ const emptyMember: RosterMemberInput = {
 };
 
 export function TeamsPage() {
+  const currentUser = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [gameFilter, setGameFilter] = useState('');
@@ -111,10 +114,20 @@ export function TeamsPage() {
 
   const selected = teams.data?.content.find((item) => item.id === selectedId);
 
+  useEffect(() => {
+    if (currentUser?.role === 'PLAYER' && !selectedId && teams.data?.content[0]) {
+      setSelectedId(teams.data.content[0].id);
+    }
+  }, [currentUser?.role, selectedId, teams.data]);
+
   const submitTeam = (event: FormEvent) => {
     event.preventDefault();
     saveTeam.mutate();
   };
+
+  if (currentUser?.role === 'PLAYER') {
+    return <PlayerTeamPage team={selected ?? null} roster={roster.data ?? []} rosterLoading={roster.isLoading} />;
+  }
 
   return (
     <PageContainer
@@ -391,4 +404,17 @@ export function TeamsPage() {
       </Modal>
     </PageContainer>
   );
+}
+
+function PlayerTeamPage({ team, roster, rosterLoading }: { team: { id: string; name: string; gameName: string; logoUrl: string | null } | null; roster: RosterMember[]; rosterLoading: boolean }) {
+  const [manage, setManage] = useState(true);
+  const [invites, setInvites] = useState(['AimBotz_22', 'HealPlz']);
+  const demoRoster = [
+    { name: 'Viper_Main', role: 'IGL', uid: 'Viper#1337', status: 'ONLINE', tone: 'online' },
+    { name: 'JettKnife', role: 'ENTRY', uid: 'Jett#999', status: 'IN MATCH', tone: 'match' },
+    { name: 'SmokeFade', role: 'CONTROLLER', uid: 'Fade#888', status: 'OFFLINE', tone: 'offline' },
+  ];
+  const members = roster.length ? roster.map((item) => ({ name: item.inGameName, role: item.role, uid: item.playerUid, status: item.active ? 'ONLINE' : 'OFFLINE', tone: item.active ? 'online' : 'offline' })) : demoRoster;
+  const displayTeam = team ?? { id: 'demo-team', name: 'Phantom Strike', gameName: 'Valorant', logoUrl: null };
+  return <div className="my-team-page"><div className="my-team-state-toggle"><button className={!manage ? 'is-active' : ''} onClick={() => setManage(false)}>View Empty State</button><button className={manage ? 'is-active' : ''} onClick={() => setManage(true)}>View Manage State</button></div><main className="my-team-content"><section className="my-team-main"><article className="my-team-identity"><div className="my-team-logo">{displayTeam.logoUrl ? <img src={displayTeam.logoUrl} alt="" /> : <Shield />}</div><div><h1>{displayTeam.name} <span>✦</span></h1><p>Competitive {displayTeam.gameName} roster focused on NA Challengers qualifiers.<br />Formed in 2023.</p><div className="my-team-tags"><span>◉ NA WEST</span><span>▣ {displayTeam.gameName.toUpperCase()}</span><span>♧ {members.length}/7 MEMBERS</span></div></div><button className="my-team-settings" aria-label="Team settings"><Settings /></button></article><section className="my-team-roster"><header><h2>Active Roster</h2><button onClick={() => setInvites((current) => [...current, `NewPlayer_${current.length + 1}`])}><UserPlus /> INVITE</button></header>{!manage ? <div className="my-team-empty">Your team roster will appear here once you create or join a team.</div> : rosterLoading ? <div className="my-team-empty">Loading roster...</div> : <div className="my-team-member-list">{members.map((member) => <div className="my-team-member" key={member.name}><div className="my-team-avatar">{member.name.slice(0, 2).toUpperCase()}</div><div><strong>{member.name} <small>{member.role}</small></strong><span>Riot ID: {member.uid}</span></div><em className={member.tone}>● {member.status}</em></div>)}</div>}</section></section><aside className="my-team-side"><section className="my-team-stat"><small>SEASON RECORD</small><strong>24<span>–8</span></strong><em>● 75% WIN RATE</em><b>GLOBAL RANK <mark>#142</mark></b><i /></section><section className="my-team-panel"><small>PENDING INVITATIONS</small>{invites.map((invite) => <div key={invite}><span>{invite}<small>Sent {invite === 'AimBotz_22' ? '2 days' : '5 hrs'} ago</small></span><button onClick={() => setInvites((current) => current.filter((item) => item !== invite))}>REVOKE</button></div>)}</section><section className="my-team-panel my-team-next"><small>NEXT SCHEDULED MATCH</small><div className="my-team-match"><b>US</b><span>Today, 20:00 PST<strong>VS</strong><small>Challengers Wk 4</small></span><b>C9</b></div><Link to="/matches">GO TO MATCH PAGE</Link></section><button className="my-team-leave"><LogOut /> LEAVE TEAM</button></aside></main></div>;
 }
