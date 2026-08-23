@@ -502,6 +502,7 @@
 }
 .games-discovery-card__image img.games-discovery-card__reference-image--pubg-mobile { left: -448px; }
 .games-discovery-card__image img.games-discovery-card__reference-image--efootball { left: -848px; }
+.games-discovery-card__image img.games-discovery-card__uploaded-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: none; }
 .games-discovery-card__body { padding: 16px; }
 .games-discovery-card__title h2 { font-size: 24px; }
 .games-discovery-card__body > p { margin-top: 16px; font-size: 16px; line-height: 1.5; }

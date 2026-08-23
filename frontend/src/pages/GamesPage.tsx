@@ -205,7 +205,16 @@ export function GamesPage() {
             return (
               <article className="games-discovery-card" key={item.id}>
                 <div className="games-discovery-card__image">
-                  <img src={referenceImage} alt="" loading="lazy" className={`games-discovery-card__reference-image games-discovery-card__reference-image--${item.slug}`} />
+                  <img
+                    src={item.slug === "efootball" ? "/efootball-card.png" : referenceImage}
+                    alt=""
+                    loading="lazy"
+                    className={
+                      item.slug === "efootball"
+                        ? "games-discovery-card__uploaded-image"
+                        : `games-discovery-card__reference-image games-discovery-card__reference-image--${item.slug}`
+                    }
+                  />
                   <span>
                     <i /> {presentation.count} active
                   </span>
