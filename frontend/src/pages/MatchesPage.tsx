@@ -54,13 +54,14 @@ type ResultTournament = { id: string; name: string; gameName: string; startsAt: 
 function PlayerResultsPage({ tournaments, query, setQuery, isLoading, error }: { tournaments: ResultTournament[]; query: string; setQuery: (value: string) => void; isLoading: boolean; error: unknown }) {
   const [game, setGame] = useState('All Games');
   const hasFilters = Boolean(query.trim()) || game !== 'All Games';
-  const filtered = tournaments.filter((item) => (!query || item.name.toLowerCase().includes(query.toLowerCase())) && (game === 'All Games' || item.gameName === game));
+  const completed = tournaments.filter((item) => item.status === 'COMPLETED');
+  const filtered = completed.filter((item) => (!query || item.name.toLowerCase().includes(query.toLowerCase())) && (game === 'All Games' || item.gameName === game));
   const demo = [
     { id: 'valorant-championship', name: 'Vanguard Championship Series 2024', gameName: 'Valorant', date: 'Oct 15, 2024', teams: ['Sentinels', 'Paper Rex', 'LOUD'], logos: ['#071424', '#281c55', '#143c18'] },
     { id: 'csgo-major', name: 'Global Offensive Major - Autumn', gameName: 'CS:GO 2', date: 'Sep 28, 2024', teams: ['FaZe Clan', 'Natus Vincere', 'Team Vitality'], logos: ['#421017', '#1e1d05', '#2d3245'] },
   ];
   const cards = filtered.length ? filtered.map((item) => ({ id: item.id, name: item.name, gameName: item.gameName, date: formatDateTime(item.startsAt), teams: ['Tournament winner', 'Finalist', 'Third place'], logos: ['#1a2840', '#281c55', '#143c18'], demo: false })) : !hasFilters && !error ? demo.map((item) => ({ ...item, demo: true })) : [];
-  const games = ['All Games', ...Array.from(new Set(tournaments.map((item) => item.gameName)))];
+  const games = ['All Games', ...Array.from(new Set(completed.map((item) => item.gameName)))];
 
   return (
     <div className="results-discovery-page">
