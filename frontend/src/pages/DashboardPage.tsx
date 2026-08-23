@@ -26,6 +26,11 @@ export function DashboardPage() {
     return <PlayerHomePage />;
   }
 
+  return <DashboardAdminPage user={user} />;
+}
+
+function DashboardAdminPage({ user }: { user: ReturnType<typeof useAuthStore.getState>['user'] }) {
+
   const tournaments = useQuery({
     queryKey: ['tournaments', 'dashboard'],
     queryFn: () => tournamentService.list(),

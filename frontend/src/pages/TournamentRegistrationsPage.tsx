@@ -97,6 +97,16 @@ export function TournamentRegistrationsPage() {
     onError: (error) => setNotice(getErrorMessage(error)),
   });
 
+  const directAddMutation = useMutation({
+    mutationFn: () => registrationService.directAdd(tournamentId, { teamId }),
+    onSuccess: async (result) => {
+      setSubmitted(result);
+      setNotice('Team directly added successfully.');
+      await refresh();
+    },
+    onError: (error) => setNotice(getErrorMessage(error)),
+  });
+
   if (tournament.isLoading) {
     return <LoadingState message="Loading registration workflow..." />;
   }
@@ -112,16 +122,6 @@ export function TournamentRegistrationsPage() {
     setNotice('');
     submitRegistration.mutate();
   };
-
-  const directAddMutation = useMutation({
-    mutationFn: () => registrationService.directAdd(tournamentId, { teamId }),
-    onSuccess: async (result) => {
-      setSubmitted(result);
-      setNotice('Team directly added successfully.');
-      await refresh();
-    },
-    onError: (error) => setNotice(getErrorMessage(error)),
-  });
 
   const directAdd = (event: FormEvent) => {
     event.preventDefault();
