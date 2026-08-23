@@ -70,6 +70,8 @@ export function GamesPage() {
   const [game, setGame] = useState(emptyGame);
   const [notice, setNotice] = useState("");
   const [search, setSearch] = useState("");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
   const games = useQuery({
     queryKey: ["games", user?.role],
@@ -102,7 +104,11 @@ export function GamesPage() {
 
   const filteredGames =
     games.data?.content.filter((item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()),
+      item.name.toLowerCase().includes(search.toLowerCase()) &&
+      (!activeTag ||
+        gamePresentation[item.slug]?.tags.some(
+          (tag) => tag.toLowerCase() === activeTag.toLowerCase(),
+        )),
     ) ?? [];
 
   return (
@@ -140,7 +146,11 @@ export function GamesPage() {
               placeholder="Search games..."
             />
           </label>
-          <button className="games-discovery-filter">
+          <button
+            className={`games-discovery-filter ${filterOpen || activeTag ? "is-active" : ""}`}
+            onClick={() => setFilterOpen((value) => !value)}
+            aria-expanded={filterOpen}
+          >
             <Filter /> Filter
           </button>
           <div className="games-discovery-view" aria-label="Game card view">
@@ -160,6 +170,27 @@ export function GamesPage() {
             </button>
           </div>
         </div>
+        {filterOpen && (
+          <div className="games-discovery-filter-menu" aria-label="Filter games">
+            {["Mobile", "BR", "Cross-play", "Sports"].map((tag) => (
+              <button
+                key={tag}
+                className={activeTag === tag ? "is-active" : ""}
+                onClick={() => {
+                  setActiveTag(activeTag === tag ? null : tag);
+                  setFilterOpen(false);
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+            {activeTag && (
+              <button className="is-clear" onClick={() => setActiveTag(null)}>
+                Clear
+              </button>
+            )}
+          </div>
+        )}
         {games.isLoading && <LoadingState message="Loading games..." />}
         {games.isError && <ErrorState message={getErrorMessage(games.error)} />}
         {filteredGames.length === 0 && !games.isLoading && (

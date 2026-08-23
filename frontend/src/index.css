@@ -481,6 +481,11 @@
 .games-discovery-toolbar { margin: -42px 0 32px; }
 .games-discovery-search { display: none; }
 .games-discovery-filter { height: 43px; padding: 0 16px; font-family: "IBM Plex Mono", monospace; font-weight: 500; }
+.games-discovery-filter.is-active { color: #d4baff; border-color: #9666db; background: #292035; }
+.games-discovery-filter-menu { display: flex; justify-content: flex-end; gap: 8px; margin: -20px 0 24px; }
+.games-discovery-filter-menu button { padding: 7px 10px; color: #cbc5d2; background: #1d1e24; border: 1px solid #45434f; border-radius: 5px; font: 11px "IBM Plex Mono", monospace; }
+.games-discovery-filter-menu button.is-active { color: #1f142c; background: #b284ff; border-color: #b284ff; }
+.games-discovery-filter-menu button.is-clear { color: #f2a8a8; border-color: #754448; }
 .games-discovery-grid { gap: 16px; }
 .games-discovery-card { border-radius: 12px; }
 .games-discovery-card__image { height: 192px; }
@@ -516,6 +521,11 @@
 .player-footer nav { display: flex; gap: 25px; margin: 0 auto; }
 .player-footer nav a { color: #c6c0cf; font: 12px "IBM Plex Mono", monospace; letter-spacing: .08em; }
 .player-footer__copyright { color: #c6c0cf; font-size: 16px; }
+.games-discovery-filter.is-active { color: #d4baff; border-color: #9666db; background: #292035; }
+.games-discovery-filter-menu { display: flex; justify-content: flex-end; gap: 8px; margin: -20px 0 24px; }
+.games-discovery-filter-menu button { padding: 7px 10px; color: #cbc5d2; background: #1d1e24; border: 1px solid #45434f; border-radius: 5px; font: 11px "IBM Plex Mono", monospace; }
+.games-discovery-filter-menu button.is-active { color: #1f142c; background: #b284ff; border-color: #b284ff; }
+.games-discovery-filter-menu button.is-clear { color: #f2a8a8; border-color: #754448; }
 
 @media (max-width: 800px) {
   .arena-navbar__inner, .player-footer { padding-left: 20px; padding-right: 20px; }
