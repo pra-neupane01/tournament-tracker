@@ -200,23 +200,31 @@ export function GamesPage() {
           className={`games-discovery-grid ${view === "list" ? "games-discovery-grid--list" : ""}`}
         >
           {filteredGames.map((item) => {
+            const normalizedSlug = item.slug.toLowerCase().replace(/_/g, "-");
+            const isFreeFire =
+              normalizedSlug === "free-fire" ||
+              item.name.toLowerCase().includes("free fire");
+            const isEfootball =
+              normalizedSlug === "efootball" ||
+              normalizedSlug === "e-football" ||
+              item.name.toLowerCase().includes("efootball");
             const presentation =
-              gamePresentation[item.slug] ?? gamePresentation["free-fire"];
+              gamePresentation[item.slug] ?? gamePresentation[normalizedSlug] ?? gamePresentation["free-fire"];
             return (
               <article className="games-discovery-card" key={item.id}>
                 <div className="games-discovery-card__image">
                   <img
                     src={
-                      item.slug === "efootball"
+                      isEfootball
                         ? "/efootball-card.png"
-                        : item.slug === "free-fire"
+                        : isFreeFire
                           ? "/freefire-card.png"
                           : referenceImage
                     }
                     alt=""
                     loading="lazy"
                     className={
-                      item.slug === "efootball" || item.slug === "free-fire"
+                      isEfootball || isFreeFire
                         ? "games-discovery-card__uploaded-image"
                         : `games-discovery-card__reference-image games-discovery-card__reference-image--${item.slug}`
                     }
