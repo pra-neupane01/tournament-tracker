@@ -82,6 +82,10 @@ export const router = createBrowserRouter([
             lazy: lazyRoute(() => import('../../pages/SettingsPage'), 'SettingsPage'),
           },
           {
+            path: 'profile',
+            lazy: lazyRoute(() => import('../../pages/PlayerProfilePage'), 'PlayerProfilePage'),
+          },
+          {
             path: 'tournaments',
             lazy: lazyRoute(
               () => import('../../pages/TournamentsPage'),

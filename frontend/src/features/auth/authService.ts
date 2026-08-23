@@ -5,6 +5,7 @@ import type {
   AuthUser,
   ChangePasswordInput,
   LoginInput,
+  ProfileSummary,
   RegisterInput,
   RegistrationResponse,
 } from './types';
@@ -23,6 +24,10 @@ export const authService = {
   },
   currentUser: async () => {
     const response = await apiClient.get<APIResponse<AuthUser>>('/auth/me');
+    return response.data.data;
+  },
+  profileSummary: async () => {
+    const response = await apiClient.get<APIResponse<ProfileSummary>>('/auth/profile/summary');
     return response.data.data;
   },
   logout: (refreshToken: string) =>

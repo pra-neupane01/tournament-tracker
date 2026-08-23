@@ -19,6 +19,15 @@ export interface AuthResponse {
   user: AuthUser;
 }
 
+export interface ProfileSummary {
+  user: AuthUser;
+  matches: number;
+  winRate: number;
+  tournamentsWon: number;
+  totalPrize: number;
+  joinedYear: number;
+}
+
 export interface RegistrationResponse {
   email: string;
   verificationRequired: boolean;

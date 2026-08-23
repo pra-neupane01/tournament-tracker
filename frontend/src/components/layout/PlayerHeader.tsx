@@ -81,7 +81,7 @@ export function PlayerHeader() {
           <NotificationCenter />
 
           <Link
-            to="/settings"
+            to="/profile"
             className="arena-profile-pill"
             aria-label="User settings"
           >
