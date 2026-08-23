@@ -1,5 +1,6 @@
 import { LogOut, Menu, Search, User, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
 import { NotificationCenter } from '../notifications/NotificationCenter';
@@ -10,6 +11,7 @@ export function PlayerHeader() {
   const logout = useAuthStore((state) => state.logout);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -26,6 +28,12 @@ export function PlayerHeader() {
   const signOut = async () => {
     await logout();
     navigate('/login', { replace: true });
+  };
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const value = search.trim();
+    navigate(value ? `/games?query=${encodeURIComponent(value)}` : '/games');
   };
 
   const navLinks = [
@@ -74,10 +82,10 @@ export function PlayerHeader() {
 
         {/* Right — Actions */}
         <div className="arena-header-actions">
-          <label className="arena-header-search">
+          <form className="arena-header-search" onSubmit={submitSearch}>
             <Search aria-hidden="true" />
-            <input type="search" placeholder="Search games..." aria-label="Search games" />
-          </label>
+            <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search games..." aria-label="Search games" />
+          </form>
           <NotificationCenter />
 
           <Link

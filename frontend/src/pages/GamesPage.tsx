@@ -17,7 +17,7 @@ import { useAuthStore } from "../features/auth/authStore";
 import { gameService } from "../features/games/gameService";
 import type { GameInput, GamePlatform } from "../features/games/types";
 import { getErrorMessage } from "../utils/apiError";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const emptyGame: GameInput = {
   name: "",
@@ -63,13 +63,14 @@ const referenceImage = "/ArenaHub%20-%20Games%20Discovery.png";
 
 export function GamesPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [game, setGame] = useState(emptyGame);
   const [notice, setNotice] = useState("");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => searchParams.get("query") ?? "");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">("grid");
