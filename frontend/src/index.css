@@ -5,25 +5,67 @@
 }
 
 @media (max-width: 720px) {
-  .arena-home__header { gap: 1rem; padding: 0 1rem; }
-  .arena-home__nav { gap: 0.8rem; overflow: hidden; }
-  .arena-home__nav a { font-size: 0.42rem; letter-spacing: 0.08em; }
-  .arena-home__actions { gap: 0.3rem; }
-  .arena-home__hero { min-height: 440px; }
-  .arena-home__hero h1 { font-size: clamp(2.25rem, 11vw, 3.3rem); }
-  .arena-home__hero p { font-size: 0.68rem; }
-  .arena-home__featured { padding: 1.5rem 1rem; }
-  .arena-home__game-grid { grid-template-columns: 1fr; gap: 0.7rem; }
-  .arena-home__game-card { aspect-ratio: 2.2; }
-  .arena-home__footer { flex-wrap: wrap; gap: 0.8rem 1.2rem; padding: 1rem; }
-  .arena-home__footer nav { order: 3; width: 100%; margin: 0; }
-  .arena-home__footer small { margin-left: auto; }
+  .arena-home__header {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  .arena-home__nav {
+    gap: 0.8rem;
+    overflow: hidden;
+  }
+  .arena-home__nav a {
+    font-size: 0.42rem;
+    letter-spacing: 0.08em;
+  }
+  .arena-home__actions {
+    gap: 0.3rem;
+  }
+  .arena-home__hero {
+    min-height: 440px;
+  }
+  .arena-home__hero h1 {
+    font-size: clamp(2.25rem, 11vw, 3.3rem);
+  }
+  .arena-home__hero p {
+    font-size: 0.68rem;
+  }
+  .arena-home__featured {
+    padding: 1.5rem 1rem;
+  }
+  .arena-home__game-grid {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  .arena-home__game-card {
+    aspect-ratio: 2.2;
+  }
+  .arena-home__footer {
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
+    padding: 1rem;
+  }
+  .arena-home__footer nav {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+  .arena-home__footer small {
+    margin-left: auto;
+  }
 }
 
 @media (max-width: 460px) {
-  .arena-home__nav a:nth-child(n + 4) { display: none; }
-  .arena-home__hero-actions { flex-direction: column; align-items: stretch; }
-  .arena-home__primary, .arena-home__secondary { text-align: center; }
+  .arena-home__nav a:nth-child(n + 4) {
+    display: none;
+  }
+  .arena-home__hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .arena-home__primary,
+  .arena-home__secondary {
+    text-align: center;
+  }
 }
 @import "tailwindcss";
 

@@ -19,7 +19,7 @@ const featuredGames = [
     name: "eFootball",
     tournaments: 12,
     image:
-      "https://images.unsplash.com/photo-1518605368461-1f12523b0542?auto=format&fit=crop&q=85&w=900",
+      "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=85&w=900",
   },
 ];
 
@@ -102,7 +102,7 @@ export const LandingPage: FC = () => {
                 className="arena-home__game-card"
                 key={game.name}
               >
-                <img src={game.image} alt="" />
+                <img src={game.image} alt="" loading="lazy" decoding="async" />
                 <span className="arena-home__game-shade" />
                 <span className="arena-home__game-info">
                   <strong>{game.name}</strong>
