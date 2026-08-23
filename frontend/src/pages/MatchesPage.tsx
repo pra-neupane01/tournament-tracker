@@ -10,8 +10,10 @@ import { competitionService } from '../features/competition/competitionService';
 import { tournamentService } from '../features/tournaments/tournamentService';
 import { getErrorMessage } from '../utils/apiError';
 import { formatDateTime } from '../utils/date';
+import { useAuthStore } from '../features/auth/authStore';
 
 export function MatchesPage() {
+  const user = useAuthStore((state) => state.user);
   const [query, setQuery] = useState('');
   const [tournamentId, setTournamentId] = useState('');
   const [stageId, setStageId] = useState('');
@@ -27,7 +29,7 @@ export function MatchesPage() {
   const fixtures = useQuery({
     queryKey: ['fixtures', stageId],
     queryFn: () => competitionService.fixtures(stageId),
-    enabled: Boolean(stageId),
+    enabled: Boolean(stageId) && user?.role !== 'PLAYER',
   });
 
   useEffect(() => {
@@ -41,6 +43,10 @@ export function MatchesPage() {
       setStageId(stages.data[0].id);
     }
   }, [stageId, stages.data]);
+
+  if (user?.role === 'PLAYER') {
+    return <PlayerResultsPage tournaments={tournaments.data?.content ?? []} query={query} setQuery={setQuery} />;
+  }
 
   return (
     <PageContainer
@@ -125,4 +131,16 @@ export function MatchesPage() {
       </div>
     </PageContainer>
   );
+}
+
+function PlayerResultsPage({ tournaments, query, setQuery }: { tournaments: { id: string; name: string; gameName: string; startsAt: string }[]; query: string; setQuery: (value: string) => void }) {
+  const [game, setGame] = useState('All Games');
+  const filtered = tournaments.filter((item) => (!query || item.name.toLowerCase().includes(query.toLowerCase())) && (game === 'All Games' || item.gameName === game));
+  const demo = [
+    { id: 'valorant-championship', name: 'Vanguard Championship Series 2024', gameName: 'Valorant', date: 'Oct 15, 2024', teams: ['Sentinels', 'Paper Rex', 'LOUD'], logos: ['#071424', '#281c55', '#143c18'] },
+    { id: 'csgo-major', name: 'Global Offensive Major – Autumn', gameName: 'CS:GO 2', date: 'Sep 28, 2024', teams: ['FaZe Clan', 'Natus Vincere', 'Team Vitality'], logos: ['#421017', '#1e1d05', '#2d3245'] },
+  ];
+  const cards = filtered.length ? filtered.map((item) => ({ id: item.id, name: item.name, gameName: item.gameName, date: formatDateTime(item.startsAt), teams: ['Tournament winner', 'Finalist', 'Third place'], logos: ['#1a2840', '#281c55', '#143c18'] })) : demo;
+  const games = ['All Games', ...Array.from(new Set([...tournaments.map((item) => item.gameName), 'Valorant', 'CS:GO 2']))];
+  return <div className="results-discovery-page"><section className="results-discovery-heading"><div><h1>Tournament Results</h1><p>Review outcomes from recent competitive events across all titles.</p></div><div className="results-discovery-filters"><label><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search tournaments..." /></label><select value={game} onChange={(event) => setGame(event.target.value)}>{games.map((item) => <option key={item}>{item}</option>)}</select></div></section><main className="results-discovery-grid">{cards.map((card) => <article className="results-card" key={card.id}><div className="results-card__heading"><h2>{card.name}</h2><div><span>{card.gameName}</span><time>▣ {card.date}</time></div></div><div className="results-card__standings">{card.teams.map((team, index) => <div key={team}><strong className={`placement placement--${index + 1}`}>{index + 1}{index === 0 ? 'st' : index === 1 ? 'nd' : 'rd'}</strong><span>{team}</span><i style={{ background: card.logos[index] }} /></div>)}</div><Link to={`/tournaments/${card.id}`}>View Full Standings <b>→</b></Link></article>)}</main></div>;
 }
