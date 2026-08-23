@@ -10,7 +10,7 @@ export function PlayerFooter() {
         <Link to="/terms">Terms</Link>
         <Link to="/privacy">Privacy</Link>
       </nav>
-      <span className="player-footer__copyright">© {new Date().getFullYear()} ArenaHub Esports. All rights reserved.</span>
+      <span className="player-footer__copyright">© 2024 ArenaHub Esports. All rights reserved.</span>
     </footer>
   );
 }
